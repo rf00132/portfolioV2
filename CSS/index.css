@@ -9,18 +9,28 @@
     --box-padding: 16px;
     --font: 'Orbitron';
 
-    --low-cutout: 25%;
+    --low-cutout: 20px;
     --high-cutout: calc(100% - var(--low-cutout));
 
-    --low-cutout-short: var(--low-cutout);
+    --low-cutout-short: 40px;
     --high-cutout-short: calc(100% - var(--low-cutout-short));
 
-    --box-top-right-cutout: polygon(0 0, 0 100%, 100% 100%, 100% var(--low-cutout-short), var(--high-cutout) 0);
-    --box-bottom-left-cutout: polygon(0 0, 0 var(--high-cutout-short), var(--low-cutout) 100%, 100% 100%, 100% 0);
-    --box-bottom-right-cutout: polygon(0 0, 0 100%, var(--high-cutout) 100%, 100% var(--high-cutout-short), 100% 0);
-    --box-top-left-cutout: polygon(0 var(--low-cutout-short), 0 100%, 100% 100%, 100% 0, var(--low-cutout) 0);
-}
+    --box-top-right-cutout: polygon(0 0, 0 100%, 100% 100%, 100% var(--low-cutout), var(--high-cutout) 0);
+    --box-bottom-left-cutout: polygon(0 0, 0 var(--high-cutout), var(--low-cutout) 100%, 100% 100%, 100% 0);
+    --box-bottom-right-cutout: polygon(0 0, 0 100%, var(--high-cutout) 100%, 100% var(--high-cutout), 100% 0);
+    --box-top-left-cutout: polygon(0 var(--low-cutout), 0 100%, 100% 100%, 100% 0, var(--low-cutout) 0);
 
+    --tile-top-right-cutout: polygon(0 0, 0 var(--high-cutout-short),var(--low-cutout-short) 100%, 100% 100%, 100% var(--low-cutout-short), var(--high-cutout-short) 0);
+
+    --tile-top-left-cutout: polygon(0 var(--low-cutout-short), 0 100%,var(--high-cutout-short) 100%, 100% var(--high-cutout-short), 100% 0, var(--low-cutout-short) 0);
+}
+/*
+ todo: look into randomising glitch start up time
+ todo: switch main body to grid for wider widths, or add in main margin to sides
+ todo: switch nav bar to burger menu button with nav column at small widths
+
+
+*/
 body {
     margin: 0;
     color: var(--text-color-dark);
@@ -28,11 +38,16 @@ body {
     position: relative;
     z-index: -20;
     font-family: var(--font), sans-serif;
+    overflow-x: hidden;
+    max-width: 100%;
 }
 
 main {
     position: relative;
     z-index: -15;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
 }
 
 h1 {
@@ -41,24 +56,36 @@ h1 {
 
 nav {
     background-color: var(--main-color);
-    padding: 4px;
+    padding: 16px 0 8px 0;
     width: 100%;
+    min-height: 40px;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+
     display: flex;
     justify-content: center;
-    position: relative;
-    z-index: -10;
+    flex-shrink: inherit;
 }
 
-.ui-box:nth-child(4n - 3), .content-box:nth-child(4n){
+.ui-box:nth-child(4n - 3){
     clip-path: var(--box-bottom-left-cutout);
 }
 
-.ui-box:nth-child(4n - 1), .content-box:nth-child(4n - 3){
+.ui-box:nth-child(4n - 1){
     clip-path: var(--box-top-left-cutout);
 }
 
-.ui-box:nth-child(4n), .content-box:nth-child(4n - 2){
+.ui-box:nth-child(4n){
     clip-path: var(--box-bottom-right-cutout);
+}
+
+.content-box:nth-child(2n){
+    clip-path: var(--tile-top-right-cutout);
+}
+
+.content-box:nth-child(2n-1){
+    clip-path: var(--tile-top-left-cutout);
 }
 
 .content-box:nth-child(4n) {
@@ -69,7 +96,9 @@ nav {
     p{
         bottom: 0;
         right: 16px;
-        margin-left: var(--low-cutout);
+        padding-top: calc(var(--low-cutout) * 2);
+        padding-right: var(--low-cutout);
+        padding-left: calc(var(--low-cutout) * 2);
         text-align: right;
     }
 }
@@ -82,33 +111,39 @@ nav {
     p{
         top: 0;
         right: 16px;
-        margin-left: var(--low-cutout);
+        padding-bottom: calc(var(--low-cutout) * 2);
+        padding-right: var(--low-cutout);
+        padding-left: calc(var(--low-cutout) * 2);
         text-align: right;
     }
 }
 
 .content-box:nth-child(4n - 2) {
     h2{
-        top: 0;
+        bottom: 0;
         right: 16px;
     }
     p{
-        bottom: 0;
+        top: 0;
         left: 16px;
-        margin-right: var(--low-cutout);
+        padding-bottom: calc(var(--low-cutout) * 2);
+        padding-left: var(--low-cutout);
+        padding-right: calc(var(--low-cutout) * 2);
         text-align: left;
     }
 }
 
 .content-box:nth-child(4n - 1) {
     h2{
-        bottom: 0;
+        top: 0;
         right: 16px;
     }
     p{
-        top: 0;
+        bottom: 0;
         left: 16px;
-        margin-right: var(--low-cutout);
+        padding-left: var(--low-cutout);
+        padding-right: calc(var(--low-cutout) * 2);
+        padding-top: calc(var(--low-cutout) * 2);
         text-align: left;
     }
 }
@@ -117,6 +152,13 @@ nav {
     background-color: var(--main-accent);
     color: var(--text-color-light);
     margin: 0 4px;
+
+    min-width: 80px;
+    span {
+
+        text-align: center;
+        width: 100%;
+    }
 }
 
 .ui-box, .content-box{
@@ -146,8 +188,7 @@ nav {
     padding: 16px;
     min-height: 170px;
     position: relative;
-
-
+    border-width: 6px;
 
     h2{
         position: absolute;
@@ -156,7 +197,6 @@ nav {
     p{
         position: relative;
     }
-
 }
 
 
