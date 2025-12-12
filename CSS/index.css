@@ -9,6 +9,7 @@
     --box-padding: 16px;
     --font: 'Orbitron';
 
+
     --low-cutout: 20px;
     --high-cutout: calc(100% - var(--low-cutout));
 
