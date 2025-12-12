@@ -24,9 +24,6 @@
 
     --tile-top-left-cutout: polygon(0 var(--low-cutout-short), 0 100%,var(--high-cutout-short) 100%, 100% var(--high-cutout-short), 100% 0, var(--low-cutout-short) 0);
 }
-/*
- todo: look into randomising glitch start up time
-*/
 
 body {
     margin: 0;
