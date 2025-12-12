@@ -47,7 +47,7 @@ main {
 }
 
 h1 {
-    justify-self: center;
+    text-align: center;
     margin-top: 80px;
 }
 
@@ -65,18 +65,6 @@ h1 {
     flex-direction: column;
     align-content: flex-start;
     position: absolute;
-}
-
-.ui-box:nth-child(4n - 3){
-    clip-path: var(--box-bottom-left-cutout);
-}
-
-.ui-box:nth-child(4n - 1){
-    clip-path: var(--box-top-left-cutout);
-}
-
-.ui-box:nth-child(4n){
-    clip-path: var(--box-bottom-right-cutout);
 }
 
 .content-box:nth-child(2n){
@@ -148,6 +136,8 @@ h1 {
 }
 
 .ui-box{
+
+    clip-path: var(--box-bottom-left-cutout);
     background-color: var(--main-accent);
     color: var(--text-color-light);
     margin: 4px;
@@ -161,7 +151,6 @@ h1 {
 }
 
 .ui-box, .content-box{
-    clip-path: var(--box-top-right-cutout);
     padding: var(--box-padding);
     border: solid 3px var(--secondary-accent);
     border-radius: 2px;
@@ -197,6 +186,8 @@ h1 {
 }
 
 .content-box{
+
+    clip-path: var(--box-top-right-cutout);
     background-color: var(--tertiary-accent);
     color: var(--text-color-light);
     --low-cutout-short: 10%;
@@ -244,6 +235,22 @@ h1 {
         width: calc(100% + 30px);
 
         justify-content: center;
+    }
+
+    .ui-box:nth-child(4n - 3){
+        clip-path: var(--box-bottom-left-cutout);
+    }
+
+    .ui-box:nth-child(4n - 1){
+        clip-path: var(--box-top-left-cutout);
+    }
+
+    .ui-box:nth-child(4n){
+        clip-path: var(--box-bottom-right-cutout);
+    }
+
+    .ui-box:nth-child(4n-2){
+        clip-path: var(--box-top-right-cutout);
     }
 
     #menu-button {
