@@ -1,6 +1,6 @@
 ﻿let points = 0;
-let pointsPerSecond = 1;
-let pointsPerClick = 1;
+let pointsPerSecond = 0;
+let pointsPerClick = 0;
 
 //Todo: make cookie pop up and cookies optional
 
@@ -47,11 +47,15 @@ function gameOnLoad(){
         pointsDisplay = document.querySelector("#game-button");
         pointsPerSecondDisplay = document.querySelector("#pointsPerSecond");
         pointsPerClickDisplay = document.querySelector("#pointsPerClick");
-
+        savePointsPerSecond();
+        savePointsPerClick();
         try {
             const savedPoints = getPoints();
-            if (savedPoints !== null) {
-                points = parseInt(savedPoints);
+            if (savedPoints !== null && savedPoints > 0) {
+                addPoints(parseInt(savedPoints));
+            } else {
+                points = 0;
+                savePoints();
             }
         } catch (error) {
             console.error("Error loading points:", error);
@@ -59,8 +63,11 @@ function gameOnLoad(){
 
         try {
             const savedPointsPerSecond = getPointsPerSecond();
-            if (savedPointsPerSecond !== null) {
-                pointsPerSecond = parseInt(savedPointsPerSecond);
+            if (savedPointsPerSecond !== null && savedPointsPerSecond > 0) {
+                incrementPointsPerSecond(parseInt(savedPointsPerSecond));
+            } else {
+                pointsPerSecond = 0;
+                savePointsPerSecond();
             }
         } catch (error) {
             console.error("Error loading points per second:", error);
@@ -68,12 +75,18 @@ function gameOnLoad(){
 
         try {
             const savedPointsPerClick = getPointsPerClick();
-            if (savedPointsPerClick !== null) {
-                pointsPerClick = parseInt(savedPointsPerClick);
+            if (savedPointsPerClick !== null && savedPointsPerClick > 0) {
+                incrementPointsPerClick(parseInt(savedPointsPerClick) - 1);
+            } else {
+                pointsPerClick = 1;
+                savePointsPerClick();
             }
         } catch (error) {
             console.error("Error loading points per click:", error);
         }
+
+        incrementPointsPerClick(0);
+        incrementPointsPerSecond(0);
 
         document.addEventListener("click", () => {
             try {
@@ -145,6 +158,7 @@ function incrementPointsPerSecond(amount){
     try {
         pointsPerSecond += amount;
         if (pointsPerSecondDisplay) {
+            console.log(pointsPerSecond);
             pointsPerSecondDisplay.innerHTML = pointsPerSecond + "/s";
         } else {
             console.error("pointsPerSecondDisplay is null or undefined");
