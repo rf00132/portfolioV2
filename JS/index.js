@@ -1,14 +1,3 @@
-/*
-injectHTML("./htmlmodules/footer.html",
-    document.querySelector("footer")
-);
-if(document.readyState === "loading"){
-    document.addEventListener("DOMContentLoaded", onLoad);
-} else {
-    onLoad();
-}
-*/
-
 injectHTML("./htmlmodules/nav.html",
     document.querySelector("nav")
 );
@@ -33,6 +22,12 @@ function onLoad(){
     injectHTML("./htmlmodules/head.html",
         document.querySelector("head")
     );
+    injectHTML("./htmlmodules/footer.html",
+        document.querySelector("footer")
+    ).then(() =>
+        loadScript("./AutoClicker/game.js")
+    );
+
     loaded = true;
 }
 let menuButton;
@@ -71,6 +66,17 @@ async function injectHTML(filePath,elem) {
     }
 }
 
+function loadScript(src) {
+    return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = src;
+        script.onload = () => resolve();
+        script.onerror = () => reject(new Error(`Script load error for ${src}`));
+        document.head.appendChild(script);
+    });
+}
+
+// Then use it after footer is loaded
 
 
 
