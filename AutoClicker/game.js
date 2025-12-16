@@ -214,3 +214,6 @@ const unlocks = {
 
 //todo: set up shop onclick functions
 //todo: work on shop ui
+//todo: fix game button at wide page widths
+//todo: sticky nav bar
+//todo: sticky game and menu buttons (along with menu bar)
