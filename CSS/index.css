@@ -182,10 +182,7 @@ h1 {
     right: 0;
 }
 
-#game-button{
-    left: 0;
-    clip-path: var(--box-bottom-right-cutout);
-}
+
 
 
 .ui-box:hover, #menu-button:hover{

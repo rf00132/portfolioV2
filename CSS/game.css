@@ -1,0 +1,36 @@
+﻿#game-button{
+    left: 0;
+    clip-path: var(--box-bottom-right-cutout);
+    height: 20px;
+    padding: 16px 24px 16px 8px;
+    p {
+        margin: 0;
+        text-align: right;
+    }
+}
+
+#game-button:hover {
+    background-color: var(--main-accent);
+}
+
+#game-button:hover #menu-text{
+    display: block;
+}
+
+#game-button:hover #points-display{
+    display: none;
+}
+
+#menu-text {
+    display: none;
+}
+
+.game-settings-box {
+    display: none;
+}
+
+
+/*
+todo: add in points effect on mouse click
+todo: add in points effect on points display?
+ */

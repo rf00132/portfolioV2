@@ -1,7 +1,11 @@
 ﻿let points = 0;
 let pointsPerSecond = 0;
 let pointsPerClick = 0;
+let pointsMultiplier = 1;
 
+let gamesPage = false;
+
+let cookies = true;
 //Todo: make cookie pop up and cookies optional
 
 let pointsDisplay;
@@ -10,6 +14,7 @@ let pointsPerClickDisplay;
 
 // Function to save a value to a cookie
 function setCookie(name, value, days) {
+    if(!cookies) return;
     let expires = "";
     if (days) {
         const date = new Date();
@@ -21,6 +26,7 @@ function setCookie(name, value, days) {
 
 // Function to get a value from a cookie
 function getCookie(name) {
+    if(!cookies) return;
     const nameEQ = name + "=";
     const ca = document.cookie.split(';');
     for (let i = 0; i < ca.length; i++) {
@@ -44,11 +50,9 @@ if(document.readyState === "loading"){
 
 function gameOnLoad(){
     try {
-        pointsDisplay = document.querySelector("#game-button");
+        pointsDisplay = document.querySelector("#points-display");
         pointsPerSecondDisplay = document.querySelector("#pointsPerSecond");
         pointsPerClickDisplay = document.querySelector("#pointsPerClick");
-        savePointsPerSecond();
-        savePointsPerClick();
         try {
             const savedPoints = getPoints();
             if (savedPoints !== null && savedPoints > 0) {
@@ -63,11 +67,10 @@ function gameOnLoad(){
 
         try {
             const savedPointsPerSecond = getPointsPerSecond();
-            if (savedPointsPerSecond !== null && savedPointsPerSecond > 0) {
+            if (savedPointsPerSecond !== null && parseInt(savedPointsPerSecond) > 0) {
                 incrementPointsPerSecond(parseInt(savedPointsPerSecond));
             } else {
-                pointsPerSecond = 0;
-                savePointsPerSecond();
+                incrementPointsPerSecond(0);
             }
         } catch (error) {
             console.error("Error loading points per second:", error);
@@ -75,18 +78,14 @@ function gameOnLoad(){
 
         try {
             const savedPointsPerClick = getPointsPerClick();
-            if (savedPointsPerClick !== null && savedPointsPerClick > 0) {
-                incrementPointsPerClick(parseInt(savedPointsPerClick) - 1);
+            if (savedPointsPerClick !== null && parseInt(savedPointsPerClick) > 0) {
+                incrementPointsPerClick(parseInt(savedPointsPerClick));
             } else {
-                pointsPerClick = 1;
-                savePointsPerClick();
+                incrementPointsPerSecond(1);
             }
         } catch (error) {
             console.error("Error loading points per click:", error);
         }
-
-        incrementPointsPerClick(0);
-        incrementPointsPerSecond(0);
 
         document.addEventListener("click", () => {
             try {
@@ -123,7 +122,7 @@ function getPoints() {
 }
 
 function savePointsPerSecond() {
-    setCookie("pointsPerSecond", pointsPerSecond, 30);
+    setCookie("pointsPerSecond", pointsPerSecond);
 }
 
 function getPointsPerSecond() {
@@ -131,23 +130,39 @@ function getPointsPerSecond() {
 }
 
 function savePointsPerClick() {
-    setCookie("pointsPerClick", pointsPerClick, 30);
+    setCookie("pointsPerClick", pointsPerClick);
 }
 
 function getPointsPerClick() {
     return getCookie("pointsPerClick");
 }
 
+function savePointsMultiplier() {
+    setCookie("pointsMultiplier", pointsMultiplier);
+}
+
+function getPointsMultiplier() {
+    return getCookie("pointsMultiplier");
+}
+
+function incrementPointsMultiplier(amount){
+    pointsMultiplier += amount;
+    savePointsMultiplier();
+    incrementPointsPerClick(0);
+    incrementPointsPerSecond(0);
+}
+
 function addPoints(amount) {
     try {
         points += amount;
+        console.log();
         if (pointsDisplay) {
             pointsDisplay.innerHTML = points;
-            pointsDisplay.setAttribute("data-text", points);
+            pointsDisplay.parentElement.setAttribute("data-text", points);
         } else {
             console.error("pointsDisplay is null or undefined");
         }
-        savePoints();
+        if(amount !== 0) savePoints();
     } catch (error) {
         console.error("Error in addPoints:", error);
     }
@@ -158,12 +173,11 @@ function incrementPointsPerSecond(amount){
     try {
         pointsPerSecond += amount;
         if (pointsPerSecondDisplay) {
-            console.log(pointsPerSecond);
-            pointsPerSecondDisplay.innerHTML = pointsPerSecond + "/s";
+            pointsPerSecondDisplay.innerHTML = pointsPerSecond*pointsMultiplier + "/s";
         } else {
             console.error("pointsPerSecondDisplay is null or undefined");
         }
-        savePointsPerSecond();
+        if(amount !== 0) savePointsPerSecond();
     } catch (error) {
         console.error("Error in incrementPointsPerSecond:", error);
     }
@@ -173,12 +187,30 @@ function incrementPointsPerClick(amount){
     try {
         pointsPerClick += amount;
         if (pointsPerClickDisplay) {
-            pointsPerClickDisplay.innerHTML = pointsPerClick + "/c";
+            pointsPerClickDisplay.innerHTML = pointsPerClick*pointsMultiplier + "/c";
         } else {
             console.error("pointsPerClickDisplay is null or undefined");
         }
-        savePointsPerClick();
+        if(amount !== 0) savePointsPerClick();
     } catch (error) {
         console.error("Error in incrementPointsPerClick:", error);
     }
 }
+
+document.querySelector("#game-button").addEventListener("click", () => {
+    const settings = document.querySelector(".game-settings-box");
+    if(settings.style.display !== "block") {
+        settings.style.display = "block";
+    }
+    else {
+        settings.style.display = "none";
+    }
+})
+
+const unlocks = {
+    games: "false",
+    rhythm: "false"
+};
+
+//todo: set up shop onclick functions
+//todo: work on shop ui

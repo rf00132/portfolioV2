@@ -19,6 +19,9 @@ function onLoad(){
     menuButton = document.querySelector('#menu-button');
     navBar = document.querySelector('.nav-bar');
     menuButton.addEventListener('click', toggleMenu);
+    injectHTML("./htmlmodules/game.html",
+        document.querySelector("nav")
+    );
     injectHTML("./htmlmodules/head.html",
         document.querySelector("head")
     );
