@@ -1,4 +1,7 @@
-﻿let points = 0;
+﻿const upgradeRatio = 0.1;
+const shopRatio = 0.1;
+
+let points = 0;
 let pointsPerSecond = 0.1;
 let pointsPerClick = 1;
 let pointsMultiplier = 1;
@@ -302,8 +305,114 @@ function onButtonClick(){
     addPoints(pointsPerButtonClick);
 }
 
-//todo: set up shop onclick functions
+function upgradePointsPerSecond(){
+    const cost = shopCosts.pointsPerSecond;
+    if(pointsPerSecond < cost) return;
+    addPoints(-cost);
+    let upgradeAmount = pointsPerSecond * upgradeRatio;
+    upgradeAmount = upgradeAmount > 10 ? upgradeAmount : 10;
+    incrementPointsPerSecond(upgradeAmount);
+    shopCosts.pointsPerSecond *= 1 + shopRatio;
+    updateCost(document.querySelector("#points-per-second"), shopCosts.pointsPerSecond);
+    updateAmount(document.querySelector("#points-per-second"), upgradeAmount);
+}
+
+function upgradePointsPerClick(){
+    const cost = shopCosts.pointsPerClick;
+    if(pointsPerClick < cost) return;
+    addPoints(-cost);
+    let upgradeAmount = pointsPerButtonClick * upgradeRatio;
+    upgradeAmount = upgradeAmount > 10 ? upgradeAmount : 10;
+    incrementPointsPerButtonClick(upgradeAmount);
+    shopCosts.pointsPerClick *= 1 + shopRatio;
+    updateCost(document.querySelector("#points-per-click"), shopCosts.pointsPerClick);
+    updateAmount(document.querySelector("#points-per-click"), upgradeAmount);
+}
+
+function upgradePointsMultiplier(){
+    const cost = shopCosts.pointsMultiplier;
+    if(pointsMultiplier < cost) return;
+    addPoints(-cost);
+    let upgradeAmount = pointsMultiplier * upgradeRatio;
+    upgradeAmount = upgradeAmount > 10 ? upgradeAmount : 10;
+    incrementPointsMultiplier(upgradeAmount);
+    shopCosts.pointsMultiplier *= 1 + shopRatio;
+    updateAmount(document.querySelector("#points-multiplier"), upgradeAmount);
+    updateCost(document.querySelector("#points-multiplier"), shopCosts.pointsMultiplier);
+}
+
+function upgradePointsScroll(){
+    const cost = shopCosts.pointsScroll;
+    if(pointsScroll < cost) return;
+    addPoints(-cost);
+    let upgradeAmount = pointsScroll * upgradeRatio;
+    upgradeAmount = upgradeAmount > 2 ? upgradeAmount : 2;
+    incrementPointsScroll(upgradeAmount);
+    shopCosts.pointsScroll *= 1 + shopRatio;
+    updateCost(document.querySelector("#points-scroll"), shopCosts.pointsScroll);
+    updateAmount(document.querySelector("#points-scroll"), upgradeAmount);
+}
+
+function upgradePointsMovement(){
+    const cost = shopCosts.pointsMovement;
+    if(pointMove < cost) return;
+    addPoints(-cost);
+    let upgradeAmount = pointMove * upgradeRatio;
+    upgradeAmount = upgradeAmount > 10 ? upgradeAmount : 10;
+    incrementPointsMovement(upgradeAmount);
+    shopCosts.pointsMovement *= 1 + shopRatio;
+    updateCost(document.querySelector("#points-movement"), shopCosts.pointsMovement);
+    updateAmount(document.querySelector("#points-movement"), upgradeAmount);
+}
+
+function upgradePointsButtonClick(){
+    const cost = shopCosts.pointsButtonClick;
+    if(points < cost) return;
+    addPoints(-cost);
+    let upgradeAmount = pointsPerButtonClick * upgradeRatio;
+    upgradeAmount = upgradeAmount > 10 ? upgradeAmount : 10;
+    incrementPointsPerButtonClick(upgradeAmount);
+    shopCosts.pointsButtonClick *= 1 + shopRatio;
+    updateCost(document.querySelector("#points-per-button-click"), shopCosts.pointsButtonClick);
+    updateAmount(document.querySelector("#points-per-button-click"), upgradeAmount);
+}
+
+function unlockGames(){
+    unlocks.games = true;
+    gamesPage = true;
+    document.querySelector("#games-page-unlock").disabled = true;
+    updateCost(document.querySelector("#games-page-unlock"), "Sold Out");
+}
+
+function updateCost(element, cost){
+    element.querySelector(".cost").innerHTML = cost;
+}
+
+
+function updateAmount(element, amount){
+    element.querySelector(".upgrade-amount").innerHTML = amount;
+}
+
+document.querySelector("#points-per-second").addEventListener("click", upgradePointsPerSecond);
+document.querySelector("#points-per-click").addEventListener("click", upgradePointsPerClick);
+document.querySelector("#points-multiplier").addEventListener("click", upgradePointsMultiplier);
+document.querySelector("#points-scroll").addEventListener("click", upgradePointsScroll);
+document.querySelector("#points-movement").addEventListener("click", upgradePointsMovement);
+document.querySelector("#points-button-click").addEventListener("click", upgradePointsButtonClick);
+document.querySelector("#games-page-unlock").addEventListener("click", unlockGames);
+
+const shopCosts = {
+    pointsPerSecond: 40,
+    pointsPerClick: 10,
+    pointsMultiplier: 40,
+    pointsScroll: 40,
+    pointsMovement: 40,
+    pointsButtonClick: 40
+};
+
+//todo: set up shop onclick upgrade functions
 //todo: work on shop ui
 //todo: fix game button at wide page widths
 //todo: sticky nav bar
 //todo: sticky game and menu buttons (along with menu bar)
+//todo: disable
