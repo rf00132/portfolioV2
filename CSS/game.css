@@ -13,20 +13,33 @@
     background-color: var(--main-accent);
 }
 
-#game-button:hover #menu-text{
+#game-button:hover .menu-text{
     display: block;
 }
 
-#game-button:hover #points-display{
+#game-button:hover .points-display{
     display: none;
 }
 
-#menu-text {
+.menu-text {
     display: none;
 }
 
 .game-settings-box {
     display: none;
+}
+
+#game-settings {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 24px 0 0 48px;
+}
+
+#game-settings .content-box {
+    min-height: 50px;
+    min-width: 240px;
 }
 
 

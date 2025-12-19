@@ -1,5 +1,7 @@
 ﻿const upgradeRatio = 0.1;
 const shopRatio = 0.1;
+let scrolled = false;
+let moved = false;
 
 let points = 0;
 let pointsPerSecond = 0.1;
@@ -48,6 +50,12 @@ function eraseCookie(name) {
     document.cookie = name + '=; Max-Age=-99999999; path=/';
 }
 
+document.querySelectorAll(".button").forEach(
+    e => e.addEventListener("click", onButtonClick)
+);
+
+window.addEventListener("scroll", () => scrolled = true);
+
 if(document.readyState === "loading"){
     document.addEventListener("DOMContentLoaded", gameOnLoad);
 } else {
@@ -56,7 +64,7 @@ if(document.readyState === "loading"){
 
 function gameOnLoad(){
     try {
-        pointsDisplay = document.querySelector("#points-display");
+        pointsDisplay = document.querySelectorAll(".points-display");
         pointsPerSecondDisplay = document.querySelector("#pointsPerSecond");
         pointsPerClickDisplay = document.querySelector("#pointsPerClick");
         try {
@@ -139,13 +147,17 @@ function gameOnLoad(){
 
         document.addEventListener("click", () => {
             try {
-                addPoints(pointsPerClick);
+                addPoints(pointsPerClick * pointsMultiplier);
             } catch (error) {
                 console.error("Error adding points:", error);
             }
         });
 
+        document.addEventListener("mousemove", () => moved = true);
+
         setInterval(addIdlePoints, 1000);
+        setInterval(addScrollPoints, 1000);
+        setInterval(addMovementPoints, 1000);
     } catch (error) {
         console.error("Error in gameOnLoad:", error);
     }
@@ -154,15 +166,23 @@ function gameOnLoad(){
 function addIdlePoints(){
     try {
         if(pointsPerSecond === 0) return;
-        addPoints(pointsPerSecond);
+        addPoints(pointsPerSecond * pointsMultiplier);
     } catch (error) {
         console.error("Error in addIdlePoints:", error);
     }
 }
 
+function addScrollPoints(){
+    if(pointsScroll === 0 || !scrolled) return;
+    addPoints(pointsScroll * pointsMultiplier);
+    scrolled = false;
+}
 
-
-
+function addMovementPoints(){
+    if(pointMove === 0 || ! moved) return;
+    addPoints(pointMove * pointsMultiplier);
+    moved = false;
+}
 function savePoints() {
     setCookie('points', points, 30); // Save for 30 days
 }
@@ -229,10 +249,13 @@ function incrementPointsMultiplier(amount){
 function addPoints(amount) {
     try {
         points += amount;
-        console.log();
         if (pointsDisplay) {
-            pointsDisplay.innerHTML = points;
-            pointsDisplay.parentElement.setAttribute("data-text", points);
+            pointsDisplay.forEach(
+                e => {
+                    e.innerHTML = points;
+                    e.parentElement.setAttribute("data-text", points);
+                }
+            );
         } else {
             console.error("pointsDisplay is null or undefined");
         }
@@ -286,7 +309,10 @@ function incrementPointsScroll(amount){
     setPointsScroll();
 }
 
-document.querySelector("#game-button").addEventListener("click", () => {
+document.querySelector("#game-button").addEventListener("click", displayStore);
+document.querySelector("#game-bar-button").addEventListener("click", displayStore);
+
+function displayStore(){
     const settings = document.querySelector(".game-settings-box");
     if(settings.style.display !== "block") {
         settings.style.display = "block";
@@ -294,7 +320,7 @@ document.querySelector("#game-button").addEventListener("click", () => {
     else {
         settings.style.display = "none";
     }
-})
+}
 
 const unlocks = {
     games: "false",
@@ -302,12 +328,12 @@ const unlocks = {
 };
 
 function onButtonClick(){
-    addPoints(pointsPerButtonClick);
+    addPoints(pointsPerButtonClick * pointsMultiplier);
 }
 
 function upgradePointsPerSecond(){
     const cost = shopCosts.pointsPerSecond;
-    if(pointsPerSecond < cost) return;
+    if(points < cost) return;
     addPoints(-cost);
     let upgradeAmount = pointsPerSecond * upgradeRatio;
     upgradeAmount = upgradeAmount > 10 ? upgradeAmount : 10;
@@ -319,7 +345,7 @@ function upgradePointsPerSecond(){
 
 function upgradePointsPerClick(){
     const cost = shopCosts.pointsPerClick;
-    if(pointsPerClick < cost) return;
+    if(points < cost) return;
     addPoints(-cost);
     let upgradeAmount = pointsPerButtonClick * upgradeRatio;
     upgradeAmount = upgradeAmount > 10 ? upgradeAmount : 10;
@@ -331,7 +357,9 @@ function upgradePointsPerClick(){
 
 function upgradePointsMultiplier(){
     const cost = shopCosts.pointsMultiplier;
-    if(pointsMultiplier < cost) return;
+    console.log(cost);
+    if(points < cost) return;
+
     addPoints(-cost);
     let upgradeAmount = pointsMultiplier * upgradeRatio;
     upgradeAmount = upgradeAmount > 10 ? upgradeAmount : 10;
@@ -398,8 +426,10 @@ document.querySelector("#points-per-click").addEventListener("click", upgradePoi
 document.querySelector("#points-multiplier").addEventListener("click", upgradePointsMultiplier);
 document.querySelector("#points-scroll").addEventListener("click", upgradePointsScroll);
 document.querySelector("#points-movement").addEventListener("click", upgradePointsMovement);
-document.querySelector("#points-button-click").addEventListener("click", upgradePointsButtonClick);
+document.querySelector("#points-per-button-click").addEventListener("click", upgradePointsButtonClick);
 document.querySelector("#games-page-unlock").addEventListener("click", unlockGames);
+
+
 
 const shopCosts = {
     pointsPerSecond: 40,

@@ -52,6 +52,7 @@ h1 {
     margin-top: 80px;
 }
 
+
 .nav-bar {
     background-color: var(--main-color);
     width: 140px;
@@ -143,7 +144,7 @@ h1 {
     color: var(--text-color-light);
     margin: 4px;
 
-    min-width: 80px;
+    min-width: 60px;
     span {
 
         text-align: center;
@@ -235,13 +236,19 @@ h1 {
 @media screen and (min-width: 800px){
     .nav-bar{
         flex-direction: row;
-        position: sticky;
+        position: inherit;
         padding: 8px 0 8px 0;
         margin-left: -15px;
         width: calc(100% + 30px);
 
         justify-content: center;
     }
+
+    nav {
+        top: 0;
+        position: sticky;
+    }
+
 
     .ui-box:nth-child(4n - 3){
         clip-path: var(--box-bottom-left-cutout);
