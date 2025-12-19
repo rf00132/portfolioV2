@@ -47,3 +47,9 @@
 todo: add in points effect on mouse click
 todo: add in points effect on points display?
  */
+
+@media screen and (min-width: 800px) {
+    #game-button {
+        display: none;
+    }
+}
