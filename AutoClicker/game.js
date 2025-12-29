@@ -240,7 +240,7 @@ function getPointsScroll(){
 }
 
 function incrementPointsMultiplier(amount){
-    pointsMultiplier += amount;
+    pointsMultiplier +=  roundToDecimalPlaces(amount);
     savePointsMultiplier();
     incrementPointsPerClick(0);
     incrementPointsPerSecond(0);
@@ -248,27 +248,45 @@ function incrementPointsMultiplier(amount){
 
 function addPoints(amount) {
     try {
-        points += amount;
-        if (pointsDisplay) {
-            pointsDisplay.forEach(
-                e => {
-                    e.innerHTML = points;
-                    e.parentElement.setAttribute("data-text", points);
-                }
-            );
-        } else {
-            console.error("pointsDisplay is null or undefined");
-        }
+        points +=  amount;
+        points = roundToDecimalPlaces(points);
+        UpdateDisplay();
         if(amount !== 0) savePoints();
     } catch (error) {
         console.error("Error in addPoints:", error);
     }
 }
 
+function UpdateDisplay() {
+    let displayText;
+    if(points < Math.pow(10, 3)) displayText = points.toString();
+    else if (points < Math.pow(10, 7)) displayText = reduceAmountForDisplay(points, 3) + "k";
+    else if (points < Math.pow(10, 10)) displayText = reduceAmountForDisplay(points, 6) + "m";
+    else if (points < Math.pow(10, 13)) displayText = reduceAmountForDisplay(points, 9) + "b";
+    else if (points < Math.pow(10, 16)) displayText = reduceAmountForDisplay(points, 12) + "t";
+    else if (points < Math.pow(10, 19)) displayText = reduceAmountForDisplay(points, 15) + "q";
+    else if (points < Math.pow(10, 22)) displayText = reduceAmountForDisplay(points, 18) + "Q";
+    else if (points < Math.pow(10, 25)) displayText = reduceAmountForDisplay(points, 21) + "s";
+    else if (points < Math.pow(10, 28)) displayText = reduceAmountForDisplay(points, 24) + "S";
+    else if (points < Math.pow(10, 31)) displayText = reduceAmountForDisplay(points, 27) + "o";
+    else if (points < Math.pow(10, 34)) displayText = reduceAmountForDisplay(points, 30) + "n";
+    else if (points < Math.pow(10, 37)) displayText = reduceAmountForDisplay(points, 33) + "d";
+    else displayText = "Lots";
+    if (pointsDisplay) {
+        pointsDisplay.forEach(
+            e => {
+                e.innerHTML = displayText;
+                e.parentElement.setAttribute("data-text", displayText);
+            }
+        );
+    } else {
+        console.error("pointsDisplay is null or undefined");
+    }
+}
 
 function incrementPointsPerSecond(amount){
     try {
-        pointsPerSecond += amount;
+        pointsPerSecond +=  roundToDecimalPlaces(amount);
         if (pointsPerSecondDisplay) {
             pointsPerSecondDisplay.innerHTML = pointsPerSecond*pointsMultiplier + "/s";
         } else {
@@ -282,7 +300,7 @@ function incrementPointsPerSecond(amount){
 
 function incrementPointsPerClick(amount){
     try {
-        pointsPerClick += amount;
+        pointsPerClick +=  roundToDecimalPlaces(amount);
         if (pointsPerClickDisplay) {
             pointsPerClickDisplay.innerHTML = pointsPerClick*pointsMultiplier + "/c";
         } else {
@@ -295,17 +313,17 @@ function incrementPointsPerClick(amount){
 }
 
 function incrementPointsPerButtonClick(amount){
-    pointsPerButtonClick += amount;
+    pointsPerButtonClick += roundToDecimalPlaces(amount);
     setPointsPerButtonClick();
 }
 
 function incrementPointsMovement(amount){
-    pointMove += amount;
+    pointMove +=  roundToDecimalPlaces(amount);
     setPointsMovement();
 }
 
 function incrementPointsScroll(amount){
-    pointsScroll += amount;
+    pointsScroll +=  roundToDecimalPlaces(amount);
     setPointsScroll();
 }
 
@@ -419,6 +437,14 @@ function updateCost(element, cost){
 
 function updateAmount(element, amount){
     element.querySelector(".upgrade-amount").innerHTML = amount;
+}
+
+function roundToDecimalPlaces(numToRound, decimalPlaces = 2){
+    return Math.round(numToRound * Math.pow(10, decimalPlaces)) / Math.pow(10, decimalPlaces);
+}
+
+function reduceAmountForDisplay(amountToReduce, reduction){
+    return roundToDecimalPlaces(points, -1 * reduction)/Math.pow(10, reduction)
 }
 
 document.querySelector("#points-per-second").addEventListener("click", upgradePointsPerSecond);
