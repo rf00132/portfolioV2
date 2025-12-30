@@ -6,20 +6,22 @@
 .layers::after {
     content: attr(data-text);
     position: absolute;
-    width: 110%;
+    width: 90%;
     height: 100%;
     z-index: 1;
 }
 
 .layers::before {
-    top: 10px;
-    left: 15px;
+    bottom: -5px;
+    right: -5px;
     color: #e0287d;
 }
 
+
+
 .layers::after {
     top: 5px;
-    left: -10px;
+    left: -5px;
     color: #1bc7fb;
 }
 

@@ -259,7 +259,7 @@ function addPoints(amount) {
 
 function UpdateDisplay() {
     let displayText;
-    if(points < Math.pow(10, 3)) displayText = points.toString();
+    if(points < Math.pow(10, 3)) displayText = points.toFixed(2);
     else if (points < Math.pow(10, 7)) displayText = reduceAmountForDisplay(points, 3) + "k";
     else if (points < Math.pow(10, 10)) displayText = reduceAmountForDisplay(points, 6) + "m";
     else if (points < Math.pow(10, 13)) displayText = reduceAmountForDisplay(points, 9) + "b";
@@ -288,7 +288,7 @@ function incrementPointsPerSecond(amount){
     try {
         pointsPerSecond +=  roundToDecimalPlaces(amount);
         if (pointsPerSecondDisplay) {
-            pointsPerSecondDisplay.innerHTML = pointsPerSecond*pointsMultiplier + "/s";
+            pointsPerSecondDisplay.innerHTML = (pointsPerSecond*pointsMultiplier).toFixed(1) + "/s";
         } else {
             console.error("pointsPerSecondDisplay is null or undefined");
         }
@@ -302,7 +302,7 @@ function incrementPointsPerClick(amount){
     try {
         pointsPerClick +=  roundToDecimalPlaces(amount);
         if (pointsPerClickDisplay) {
-            pointsPerClickDisplay.innerHTML = pointsPerClick*pointsMultiplier + "/c";
+            pointsPerClickDisplay.innerHTML = (pointsPerClick*pointsMultiplier).toFixed(0) + "/c";
         } else {
             console.error("pointsPerClickDisplay is null or undefined");
         }
@@ -431,12 +431,13 @@ function unlockGames(){
 }
 
 function updateCost(element, cost){
-    element.querySelector(".cost").innerHTML = cost;
+    element.querySelector(".cost").innerHTML = cost.toFixed(2);
 }
 
 
 function updateAmount(element, amount){
-    element.querySelector(".upgrade-amount").innerHTML = amount;
+    console.log(element +", " + amount);
+    element.querySelector(".upgrade-amount").innerHTML = amount.toFixed(2);
 }
 
 function roundToDecimalPlaces(numToRound, decimalPlaces = 2){
@@ -455,6 +456,22 @@ document.querySelector("#points-movement").addEventListener("click", upgradePoin
 document.querySelector("#points-per-button-click").addEventListener("click", upgradePointsButtonClick);
 document.querySelector("#games-page-unlock").addEventListener("click", unlockGames);
 
+function setUpShop(){
+
+}
+
+const shopButtons = [
+    document.querySelector("#points-per-button-click"),
+    document.querySelector("#points-per-button-click"),
+    document.querySelector("#points-per-button-click"),
+    document.querySelector("#points-per-button-click"),
+    document.querySelector("#points-per-button-click"),
+    document.querySelector("#points-per-button-click"),
+    document.querySelector("#points-per-button-click"),
+    document.querySelector("#points-per-button-click"),
+    document.querySelector("#points-per-button-click"),
+    document.querySelector("#points-per-button-click")
+]
 
 
 const shopCosts = {

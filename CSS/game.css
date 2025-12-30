@@ -27,6 +27,7 @@
 
 .game-settings-box {
     display: none;
+    padding: 0 32px;
 }
 
 #game-settings {
@@ -34,12 +35,33 @@
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
-    padding: 24px 0 0 48px;
+    padding: 0;
 }
 
 #game-settings .content-box {
     min-height: 50px;
     min-width: 240px;
+    justify-content: center;
+}
+
+
+.game-debug{
+    position: sticky;
+    bottom: 8px;
+    left: 8px;
+}
+
+#game-bar-button:hover .menu-text {
+    display: block;
+
+}
+
+#game-bar-button:hover .points-display{
+    display: none;
+}
+
+.points-display, .menu-text{
+    margin: 0;
 }
 
 
