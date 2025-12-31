@@ -448,30 +448,27 @@ function reduceAmountForDisplay(amountToReduce, reduction){
     return roundToDecimalPlaces(points, -1 * reduction)/Math.pow(10, reduction)
 }
 
-document.querySelector("#points-per-second").addEventListener("click", upgradePointsPerSecond);
-document.querySelector("#points-per-click").addEventListener("click", upgradePointsPerClick);
-document.querySelector("#points-multiplier").addEventListener("click", upgradePointsMultiplier);
-document.querySelector("#points-scroll").addEventListener("click", upgradePointsScroll);
-document.querySelector("#points-movement").addEventListener("click", upgradePointsMovement);
-document.querySelector("#points-per-button-click").addEventListener("click", upgradePointsButtonClick);
-document.querySelector("#games-page-unlock").addEventListener("click", unlockGames);
+const perSecondUpgrade = document.querySelector("#points-per-second");
+const perClickUpgrade = document.querySelector("#points-per-click");
+const multiplierUpgrade = document.querySelector("#points-multiplier");
+const scrollUpgrade = document.querySelector("#points-scroll");
+const movementUpgrade = document.querySelector("#points-movement");
+const perButtonClick = document.querySelector("#points-per-button-click");
+const gamesUnlock = document.querySelector("#games-page-unlock");
+
+
+perSecondUpgrade.addEventListener("click", upgradePointsPerSecond);
+perClickUpgrade.addEventListener("click", upgradePointsPerClick);
+multiplierUpgrade.addEventListener("click", upgradePointsMultiplier);
+scrollUpgrade.addEventListener("click", upgradePointsScroll);
+movementUpgrade.addEventListener("click", upgradePointsMovement);
+perButtonClick.addEventListener("click", upgradePointsButtonClick);
+gamesUnlock.addEventListener("click", unlockGames);
 
 function setUpShop(){
 
 }
 
-const shopButtons = [
-    document.querySelector("#points-per-button-click"),
-    document.querySelector("#points-per-button-click"),
-    document.querySelector("#points-per-button-click"),
-    document.querySelector("#points-per-button-click"),
-    document.querySelector("#points-per-button-click"),
-    document.querySelector("#points-per-button-click"),
-    document.querySelector("#points-per-button-click"),
-    document.querySelector("#points-per-button-click"),
-    document.querySelector("#points-per-button-click"),
-    document.querySelector("#points-per-button-click")
-]
 
 
 const shopCosts = {
