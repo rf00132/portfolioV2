@@ -10,7 +10,9 @@
 }
 
 #game-button:hover {
-    background-color: var(--main-accent);
+    background-color: var(--tertiary-accent);
+    cursor: pointer;
+
 }
 
 #game-button:hover .menu-text{
@@ -28,6 +30,21 @@
 .game-settings-box {
     display: none;
     padding: 0 32px;
+    position: absolute;
+    margin: 64px 160px;
+    background: var(--main-accent);
+    border: 6px solid var(--secondary-accent);
+    clip-path: var(--tile-all-cutout);
+
+    .content-box {
+        clip-path: var(--box-bottom-left-cutout);
+        border: none;
+    }
+
+    .content-box:hover {
+        background-color: var(--main-color);
+        cursor: pointer;
+    }
 }
 
 #game-settings {
@@ -42,6 +59,7 @@
     min-height: 50px;
     min-width: 240px;
     justify-content: center;
+    z-index: 10;
 }
 
 

@@ -1,5 +1,8 @@
-﻿const upgradeRatio = 0.1;
-const shopRatio = 0.1;
+﻿//todo: rebalance shop upgrade ratio formula
+//todo: absolute position settings menu is not scrollable, look into reorganising the html and css so it is
+
+const upgradeRatio = 0.1;
+const shopRatio = 0.3;
 let scrolled = false;
 let moved = false;
 
@@ -257,6 +260,7 @@ function addPoints(amount) {
     }
 }
 
+//todo: simplify this and make it multipurpose
 function UpdateDisplay() {
     let displayText;
     if(points < Math.pow(10, 3)) displayText = points.toFixed(2);
@@ -351,10 +355,11 @@ function onButtonClick(){
 
 function upgradePointsPerSecond(){
     const cost = shopCosts.pointsPerSecond;
+    console.log("upgrding points per second")
     if(points < cost) return;
     addPoints(-cost);
     let upgradeAmount = pointsPerSecond * upgradeRatio;
-    upgradeAmount = upgradeAmount > 10 ? upgradeAmount : 10;
+    upgradeAmount = upgradeAmount > 0.1 ? upgradeAmount : 0.1;
     incrementPointsPerSecond(upgradeAmount);
     shopCosts.pointsPerSecond *= 1 + shopRatio;
     updateCost(document.querySelector("#points-per-second"), shopCosts.pointsPerSecond);
@@ -366,7 +371,7 @@ function upgradePointsPerClick(){
     if(points < cost) return;
     addPoints(-cost);
     let upgradeAmount = pointsPerButtonClick * upgradeRatio;
-    upgradeAmount = upgradeAmount > 10 ? upgradeAmount : 10;
+    upgradeAmount = upgradeAmount > 1 ? upgradeAmount : 1;
     incrementPointsPerButtonClick(upgradeAmount);
     shopCosts.pointsPerClick *= 1 + shopRatio;
     updateCost(document.querySelector("#points-per-click"), shopCosts.pointsPerClick);
@@ -380,7 +385,7 @@ function upgradePointsMultiplier(){
 
     addPoints(-cost);
     let upgradeAmount = pointsMultiplier * upgradeRatio;
-    upgradeAmount = upgradeAmount > 10 ? upgradeAmount : 10;
+    upgradeAmount = upgradeAmount > 0.1 ? upgradeAmount : 0.1;
     incrementPointsMultiplier(upgradeAmount);
     shopCosts.pointsMultiplier *= 1 + shopRatio;
     updateAmount(document.querySelector("#points-multiplier"), upgradeAmount);
@@ -389,7 +394,7 @@ function upgradePointsMultiplier(){
 
 function upgradePointsScroll(){
     const cost = shopCosts.pointsScroll;
-    if(pointsScroll < cost) return;
+    if(points < cost) return;
     addPoints(-cost);
     let upgradeAmount = pointsScroll * upgradeRatio;
     upgradeAmount = upgradeAmount > 2 ? upgradeAmount : 2;
@@ -401,16 +406,19 @@ function upgradePointsScroll(){
 
 function upgradePointsMovement(){
     const cost = shopCosts.pointsMovement;
-    if(pointMove < cost) return;
+    console.log("upgrading points movement")
+    if(points < cost) return;
     addPoints(-cost);
     let upgradeAmount = pointMove * upgradeRatio;
-    upgradeAmount = upgradeAmount > 10 ? upgradeAmount : 10;
+    upgradeAmount = upgradeAmount > 1 ? upgradeAmount : 1;
     incrementPointsMovement(upgradeAmount);
     shopCosts.pointsMovement *= 1 + shopRatio;
+    console.log("updating points movement figures")
     updateCost(document.querySelector("#points-movement"), shopCosts.pointsMovement);
     updateAmount(document.querySelector("#points-movement"), upgradeAmount);
 }
 
+//todo: this logic might need changing, amount
 function upgradePointsButtonClick(){
     const cost = shopCosts.pointsButtonClick;
     if(points < cost) return;
@@ -418,6 +426,8 @@ function upgradePointsButtonClick(){
     let upgradeAmount = pointsPerButtonClick * upgradeRatio;
     upgradeAmount = upgradeAmount > 10 ? upgradeAmount : 10;
     incrementPointsPerButtonClick(upgradeAmount);
+    //todo: this below line may need to be added to other functions
+    upgradeAmount = upgradeAmount > 10 ? upgradeAmount : 10;
     shopCosts.pointsButtonClick *= 1 + shopRatio;
     updateCost(document.querySelector("#points-per-button-click"), shopCosts.pointsButtonClick);
     updateAmount(document.querySelector("#points-per-button-click"), upgradeAmount);
@@ -465,11 +475,27 @@ movementUpgrade.addEventListener("click", upgradePointsMovement);
 perButtonClick.addEventListener("click", upgradePointsButtonClick);
 gamesUnlock.addEventListener("click", unlockGames);
 
+
+//todo: refactor this into a function instead of repeating
 function setUpShop(){
+    updateCost(perSecondUpgrade, shopCosts.pointsPerSecond);
+    updateAmount(perSecondUpgrade, pointsPerSecond * upgradeRatio > 0.1 ? pointsPerSecond * upgradeRatio : 0.1);
 
+    updateCost(perClickUpgrade, shopCosts.pointsPerClick);
+    updateAmount(perClickUpgrade, pointsPerClick * upgradeRatio > 1 ? pointsPerClick * upgradeRatio : 1);
+
+    updateCost(perButtonClick, shopCosts.pointsButtonClick);
+    updateAmount(perButtonClick, pointsPerButtonClick * upgradeRatio > 10 ? pointsPerButtonClick * upgradeRatio : 10);
+
+    updateCost(movementUpgrade, shopCosts.pointsMovement);
+    updateAmount(movementUpgrade, pointMove * upgradeRatio > 1 ? pointMove * upgradeRatio : 1);
+
+    updateCost(scrollUpgrade, shopCosts.pointsScroll);
+    updateAmount(scrollUpgrade, pointsScroll * upgradeRatio > 2 ? pointsScroll * upgradeRatio : 2);
+
+    updateCost(multiplierUpgrade, shopCosts.pointsMultiplier);
+    updateAmount(multiplierUpgrade, pointsMultiplier * upgradeRatio > 0.1 ? pointsMultiplier * upgradeRatio : 0.1);
 }
-
-
 
 const shopCosts = {
     pointsPerSecond: 40,
@@ -480,9 +506,10 @@ const shopCosts = {
     pointsButtonClick: 40
 };
 
-//todo: set up shop onclick upgrade functions
+//todo: add in saving and loading for shop costs
+//todo: revamp save cookie to single cookie
 //todo: work on shop ui
-//todo: fix game button at wide page widths
-//todo: sticky nav bar
-//todo: sticky game and menu buttons (along with menu bar)
-//todo: disable
+//todo: disable option
+
+
+setUpShop();

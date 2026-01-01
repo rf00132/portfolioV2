@@ -18,6 +18,7 @@ function onLoad(){
     if(loaded) return;
     menuButton = document.querySelector('#menu-button');
     navBar = document.querySelector('.nav-bar');
+    console.log(menuButton);
     menuButton.addEventListener('click', toggleMenu);
     injectHTML("./htmlmodules/game.html",
         document.querySelector("nav")
@@ -39,6 +40,8 @@ let menuOpen = false;
 
 window.onresize = removeMenuStyle;
 function toggleMenu() {
+    //todo: this function is not triggering on menu button click anymore
+    console.log("menuOpen");
     if(menuOpen){
         navBar.style.right = "-240px";
         menuOpen = false;
@@ -79,7 +82,6 @@ function loadScript(src) {
     });
 }
 
-// Then use it after footer is loaded
 
 
 
