@@ -9,10 +9,18 @@ let moved = false;
 let points = 0;
 let pointsPerSecond = 0;
 let pointsPerClick = 0;
-let pointsMultiplier = 1;
+let pointsMultiplier = 0;
 let pointsPerButtonClick = 0;
 let pointsScroll = 0;
 let pointMove = 0;
+let shopCosts = {
+    pointsPerSecond: 40,
+    pointsPerClick: 10,
+    pointsMultiplier: 40,
+    pointsScroll: 40,
+    pointsMovement: 40,
+    pointsButtonClick: 40
+};
 
 let gamesPage = false;
 
@@ -104,7 +112,7 @@ function gameOnLoad(){
             if(savedPointsMultiplier !== null && savedPointsMultiplier > 0){
                 incrementPointsMultiplier(savedPointsMultiplier);
             } else {
-                incrementPointsMultiplier(0);
+                incrementPointsMultiplier(1);
             }
         } catch (error) {
             console.error("Error loading points multiplier:", error);
@@ -247,11 +255,11 @@ function getPointsScroll(){
 }
 
 function getShopCosts(){
-    return getCookie("shopCosts");
+    return JSON.parse(getCookie("shopCosts"));
 }
 
 function setShopCosts(){
-    setCookie("shopCosts", shopCosts);
+    setCookie("shopCosts", JSON.stringify(shopCosts));
 }
 
 function incrementPointsMultiplier(amount){
@@ -272,22 +280,8 @@ function addPoints(amount) {
     }
 }
 
-//todo: simplify this and make it multipurpose
 function UpdateDisplay() {
-    let displayText;
-    if(points < Math.pow(10, 3)) displayText = points.toFixed(2);
-    else if (points < Math.pow(10, 7)) displayText = reduceAmountForDisplay(points, 3) + "k";
-    else if (points < Math.pow(10, 10)) displayText = reduceAmountForDisplay(points, 6) + "m";
-    else if (points < Math.pow(10, 13)) displayText = reduceAmountForDisplay(points, 9) + "b";
-    else if (points < Math.pow(10, 16)) displayText = reduceAmountForDisplay(points, 12) + "t";
-    else if (points < Math.pow(10, 19)) displayText = reduceAmountForDisplay(points, 15) + "q";
-    else if (points < Math.pow(10, 22)) displayText = reduceAmountForDisplay(points, 18) + "Q";
-    else if (points < Math.pow(10, 25)) displayText = reduceAmountForDisplay(points, 21) + "s";
-    else if (points < Math.pow(10, 28)) displayText = reduceAmountForDisplay(points, 24) + "S";
-    else if (points < Math.pow(10, 31)) displayText = reduceAmountForDisplay(points, 27) + "o";
-    else if (points < Math.pow(10, 34)) displayText = reduceAmountForDisplay(points, 30) + "n";
-    else if (points < Math.pow(10, 37)) displayText = reduceAmountForDisplay(points, 33) + "d";
-    else displayText = "Lots";
+    let displayText = formatNumber(points);
     if (pointsDisplay) {
         pointsDisplay.forEach(
             e => {
@@ -369,17 +363,17 @@ function upgradePointsPerSecond(){
     const cost = shopCosts.pointsPerSecond;
     console.log("upgrding points per second")
     if(points < cost) return;
-    addPoints(-cost);
+    addPoints(-1 * cost);
     let upgradeAmount = pointsPerSecond * upgradeRatio;
     incrementPointsPerSecond(upgradeAmount > 0.1 ? upgradeAmount : 0.1);
-    shopCosts.pointsPerSecond.cost *= 1 + shopRatio;
+    shopCosts.pointsPerSecond *= 1 + shopRatio;
     updatePerSecondShopItem();
 }
 
 function upgradePointsPerClick(){
     const cost = shopCosts.pointsPerClick;
     if(points < cost) return;
-    addPoints(-cost);
+    addPoints(-1 * cost);
     let upgradeAmount = pointsPerButtonClick * upgradeRatio;
     incrementPointsPerClick(upgradeAmount > 1 ? upgradeAmount : 1);
     shopCosts.pointsPerClick *= 1 + shopRatio;
@@ -391,7 +385,7 @@ function upgradePointsMultiplier(){
     console.log(cost);
     if(points < cost) return;
 
-    addPoints(-cost);
+    addPoints(-1 * cost);
     let upgradeAmount = pointsMultiplier * upgradeRatio;
     incrementPointsMultiplier(upgradeAmount > 0.1 ? upgradeAmount : 0.1);
     shopCosts.pointsMultiplier *= 1 + shopRatio;
@@ -401,7 +395,7 @@ function upgradePointsMultiplier(){
 function upgradePointsScroll(){
     const cost = shopCosts.pointsScroll;
     if(points < cost) return;
-    addPoints(-cost);
+    addPoints(-1 * cost);
     let upgradeAmount = pointsScroll * upgradeRatio;
     incrementPointsScroll(upgradeAmount > 2 ? upgradeAmount : 2);
     shopCosts.pointsScroll *= 1 + shopRatio;
@@ -412,21 +406,19 @@ function upgradePointsMovement(){
     const cost = shopCosts.pointsMovement;
     console.log("upgrading points movement")
     if(points < cost) return;
-    addPoints(-cost);
+    addPoints(-1 * cost);
     let upgradeAmount = pointMove * upgradeRatio;
     incrementPointsMovement(upgradeAmount > 1 ? upgradeAmount : 1);
     shopCosts.pointsMovement *= 1 + shopRatio;
     updateMovementShopItem();
 }
 
-//todo: this logic might need changing, amount
 function upgradePointsButtonClick(){
     const cost = shopCosts.pointsButtonClick;
     if(points < cost) return;
-    addPoints(-cost);
+    addPoints(-1 * cost);
     let upgradeAmount = pointsPerButtonClick * upgradeRatio;
     incrementPointsPerButtonClick(upgradeAmount > 10 ? upgradeAmount : 10);
-    //todo: this below line may need to be added to other functions
     shopCosts.pointsButtonClick *= 1 + shopRatio;
     updateButtonClickItem();
 }
@@ -439,19 +431,20 @@ function unlockGames(){
 }
 
 function updateCost(element, cost){
-    element.querySelector(".cost").innerHTML = cost.toFixed(2);
+    element.querySelector(".cost").innerHTML = formatNumber(cost);
+    setShopCosts();
+    console.log(shopCosts.pointsPerSecond);
 }
 
 
 function updateAmount(element, amount){
-    console.log(element +", " + amount);
-    element.querySelector(".upgrade-amount").innerHTML = amount.toFixed(2);
+    element.querySelector(".upgrade-amount").innerHTML =  formatNumber(amount);
 }
 function updateCurrentAmount(element, amount){
-    element.querySelector(".current-amount").innerHTML = amount.toFixed(2);
+    element.querySelector(".current-amount").innerHTML = formatNumber(amount);
 }
 
-function roundToDecimalPlaces(numToRound, decimalPlaces = 2){
+function roundToDecimalPlaces(numToRound, decimalPlaces = 1){
     return Math.round(numToRound * Math.pow(10, decimalPlaces)) / Math.pow(10, decimalPlaces);
 }
 
@@ -477,7 +470,6 @@ perButtonClick.addEventListener("click", upgradePointsButtonClick);
 gamesUnlock.addEventListener("click", unlockGames);
 
 
-//todo: refactor this into a function instead of repeating
 function setUpShop(){
     updatePerSecondShopItem();
     updateClickShopItem();
@@ -488,7 +480,7 @@ function setUpShop(){
 }
 
 function updatePerSecondShopItem(){
-    updateCost(perSecondUpgrade, shopCosts.pointsPerSecond.cost);
+    updateCost(perSecondUpgrade, shopCosts.pointsPerSecond);
     updateAmount(perSecondUpgrade, pointsPerSecond * upgradeRatio > 0.1 ? pointsPerSecond * upgradeRatio : 0.1);
     updateCurrentAmount(perSecondUpgrade, pointsPerSecond);
 }
@@ -523,22 +515,25 @@ function updateMultiplierShopItem(){
     updateCurrentAmount(multiplierUpgrade, pointsMultiplier);
 }
 
-let shopCosts = {
-    pointsPerSecond:
-        {
-            cost: 40,
-            amount: 1
-        },
-    pointsPerClick: 10,
-    pointsMultiplier: 40,
-    pointsScroll: 40,
-    pointsMovement: 40,
-    pointsButtonClick: 40
-};
 
-//todo: add in saving and loading for shop costs
+
 //todo: revamp save cookie to single cookie
-//todo: work on shop ui
 
-
+function formatNumber(num) {
+    let formattedNum;
+    if(num < Math.pow(10, 3)) formattedNum = num.toFixed(1);
+    else if (num < Math.pow(10, 7)) formattedNum = reduceAmountForDisplay(num, 3) + "k";
+    else if (num < Math.pow(10, 10)) formattedNum = reduceAmountForDisplay(num, 6) + "m";
+    else if (num < Math.pow(10, 13)) formattedNum = reduceAmountForDisplay(num, 9) + "b";
+    else if (num < Math.pow(10, 16)) formattedNum = reduceAmountForDisplay(num, 12) + "t";
+    else if (num < Math.pow(10, 19)) formattedNum = reduceAmountForDisplay(num, 15) + "q";
+    else if (num < Math.pow(10, 22)) formattedNum = reduceAmountForDisplay(num, 18) + "Q";
+    else if (num < Math.pow(10, 25)) formattedNum = reduceAmountForDisplay(num, 21) + "s";
+    else if (num < Math.pow(10, 28)) formattedNum = reduceAmountForDisplay(num, 24) + "S";
+    else if (num < Math.pow(10, 31)) formattedNum = reduceAmountForDisplay(num, 27) + "o";
+    else if (num < Math.pow(10, 34)) formattedNum = reduceAmountForDisplay(num, 30) + "n";
+    else if (num < Math.pow(10, 37)) formattedNum = reduceAmountForDisplay(num, 33) + "d";
+    else formattedNum = "Lots";
+    return formattedNum;
+}
 setUpShop();
