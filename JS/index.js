@@ -1,3 +1,6 @@
+//todo: add in blank empty div that takes up the rest of the space of the page
+// it can be given toggle menu as an event listener and that function can hide and show the blank div
+
 injectHTML("./htmlmodules/nav.html",
     document.querySelector("nav")
 );
@@ -13,24 +16,41 @@ glitchText.forEach(element => {
     element.innerHTML = "<span>" + element.innerHTML + "</span>";
 });
 
+function toggleMenu() {
+    console.log("menuOpen");
+    console.log(menuOpen)
+    if(menuOpen){
+        menuButton.innerText = "Menu";
+        navBar.setAttribute('style', '');
+        console.log("menu closed");
+        menuOpen = false;
+    } else {
+        menuButton.innerText = "Close";
+        navBar.setAttribute('style', 'right: 0 !important');
+        console.log("menu opened");
+        menuOpen = true;
+    }
+}
 
 function onLoad(){
     if(loaded) return;
-    menuButton = document.querySelector('#menu-button');
-    navBar = document.querySelector('.nav-bar');
-    console.log(menuButton);
-    menuButton.addEventListener('click', toggleMenu);
-    injectHTML("./htmlmodules/game.html",
+    console.log(navBar);
+    const resp = injectHTML("./htmlmodules/game.html",
         document.querySelector("nav")
-    );
-    injectHTML("./htmlmodules/head.html",
-        document.querySelector("head")
-    );
-    injectHTML("./htmlmodules/footer.html",
-        document.querySelector("footer")
     ).then(() =>
-        loadScript("./AutoClicker/game.js")
-    );
+        injectHTML("./htmlmodules/head.html",
+            document.querySelector("head")
+        )
+    ).then(() =>
+        injectHTML("./htmlmodules/footer.html",
+            document.querySelector("footer")
+        )
+    ).then(() => {
+        menuButton = document.querySelector('#menu-button');
+        navBar = document.querySelector('.nav-bar');
+        menuButton.addEventListener('click', toggleMenu);
+        return loadScript("./AutoClicker/game.js");
+    });
 
     loaded = true;
 }
@@ -39,22 +59,13 @@ let navBar;
 let menuOpen = false;
 
 window.onresize = removeMenuStyle;
-function toggleMenu() {
-    //todo: this function is not triggering on menu button click anymore
-    console.log("menuOpen");
-    if(menuOpen){
-        navBar.style.right = "-240px";
-        menuOpen = false;
-    } else {
-        navBar.style.right = "0";
-        menuOpen = true;
-    }
-}
+
 
 function removeMenuStyle(){
     if(window.innerWidth < 800) return;
     navBar.style = "";
     menuOpen = false;
+    menuButton.innerText = "Menu";
 }
 
 

@@ -1,5 +1,7 @@
 ﻿//todo: rebalance shop upgrade ratio formula
 //todo: absolute position settings menu is not scrollable, look into reorganising the html and css so it is
+//todo: cookies currently set to be session only
+//todo: make cookie pop up and saving cookies for longer optional
 
 const upgradeRatio = 0.1;
 const shopRatio = 0.3;
@@ -25,7 +27,6 @@ let shopCosts = {
 let gamesPage = false;
 
 let cookies = true;
-//Todo: make cookie pop up and cookies optional
 
 let pointsDisplay;
 let pointsPerSecondDisplay;
@@ -199,7 +200,7 @@ function addMovementPoints(){
     moved = false;
 }
 function savePoints() {
-    setCookie('points', points, 30); // Save for 30 days
+    setCookie('points', points); // Save for 30 days
 }
 
 function getPoints() {
@@ -361,7 +362,7 @@ function onButtonClick(){
 
 function upgradePointsPerSecond(){
     const cost = shopCosts.pointsPerSecond;
-    console.log("upgrding points per second")
+    console.log("upgrading points per second")
     if(points < cost) return;
     addPoints(-1 * cost);
     let upgradeAmount = pointsPerSecond * upgradeRatio;
@@ -384,7 +385,6 @@ function upgradePointsMultiplier(){
     const cost = shopCosts.pointsMultiplier;
     console.log(cost);
     if(points < cost) return;
-
     addPoints(-1 * cost);
     let upgradeAmount = pointsMultiplier * upgradeRatio;
     incrementPointsMultiplier(upgradeAmount > 0.1 ? upgradeAmount : 0.1);
@@ -537,3 +537,4 @@ function formatNumber(num) {
     return formattedNum;
 }
 setUpShop();
+document.querySelector('#menu-button').addEventListener('click', toggleMenu);

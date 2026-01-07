@@ -76,6 +76,10 @@
     left: 8px;
 }
 
+#game-bar-button{
+    display: none;
+}
+
 #game-bar-button:hover .menu-text {
     display: block;
 
@@ -106,5 +110,7 @@ todo: add in points effect on points display?
         display: none;
     }
 
-
+    #game-bar-button {
+        display: block;
+    }
 }
