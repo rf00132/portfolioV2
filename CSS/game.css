@@ -64,6 +64,8 @@
     min-height: 50px;
     width: 240px;
     justify-content: center;
+    align-content: center;
+    text-align: center;
     z-index: 10;
 }
 
