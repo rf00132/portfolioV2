@@ -7,10 +7,10 @@ let scrolled = false;
 let moved = false;
 
 let points = 0;
-let pointsPerSecond = 0.1;
-let pointsPerClick = 1;
+let pointsPerSecond = 0;
+let pointsPerClick = 0;
 let pointsMultiplier = 1;
-let pointsPerButtonClick = 10;
+let pointsPerButtonClick = 0;
 let pointsScroll = 0;
 let pointMove = 0;
 
@@ -48,11 +48,6 @@ function getCookie(name) {
     return null;
 }
 
-// Function to delete a cookie
-function eraseCookie(name) {
-    document.cookie = name + '=; Max-Age=-99999999; path=/';
-}
-
 document.querySelectorAll(".button").forEach(
     e => e.addEventListener("click", onButtonClick)
 );
@@ -87,7 +82,7 @@ function gameOnLoad(){
             if (savedPointsPerSecond !== null && savedPointsPerSecond > 0) {
                 incrementPointsPerSecond(savedPointsPerSecond);
             } else {
-                incrementPointsPerSecond(0);
+                incrementPointsPerSecond(0.1);
             }
         } catch (error) {
             console.error("Error loading points per second:", error);
@@ -98,7 +93,7 @@ function gameOnLoad(){
             if (savedPointsPerClick !== null && savedPointsPerClick > 0) {
                 incrementPointsPerClick(savedPointsPerClick);
             } else {
-                incrementPointsPerSecond(0);
+                incrementPointsPerClick(1);
             }
         } catch (error) {
             console.error("Error loading points per click:", error);
@@ -146,6 +141,15 @@ function gameOnLoad(){
             }
         } catch (error) {
             console.error("Error loading points scroll:", error);
+        }
+
+        try{
+            const savedShopCosts = getShopCosts();
+            if(savedShopCosts !== null){
+                shopCosts = savedShopCosts;
+            }
+        } catch (error) {
+            console.error("Error loading shop cost:", error);
         }
 
         document.addEventListener("click", () => {
@@ -240,6 +244,14 @@ function setPointsScroll(){
 
 function getPointsScroll(){
     return getCookie("pointsScroll");
+}
+
+function getShopCosts(){
+    return getCookie("shopCosts");
+}
+
+function setShopCosts(){
+    setCookie("shopCosts", shopCosts);
 }
 
 function incrementPointsMultiplier(amount){
@@ -359,11 +371,9 @@ function upgradePointsPerSecond(){
     if(points < cost) return;
     addPoints(-cost);
     let upgradeAmount = pointsPerSecond * upgradeRatio;
-    upgradeAmount = upgradeAmount > 0.1 ? upgradeAmount : 0.1;
-    incrementPointsPerSecond(upgradeAmount);
-    shopCosts.pointsPerSecond *= 1 + shopRatio;
-    updateCost(document.querySelector("#points-per-second"), shopCosts.pointsPerSecond);
-    updateAmount(document.querySelector("#points-per-second"), upgradeAmount);
+    incrementPointsPerSecond(upgradeAmount > 0.1 ? upgradeAmount : 0.1);
+    shopCosts.pointsPerSecond.cost *= 1 + shopRatio;
+    updatePerSecondShopItem();
 }
 
 function upgradePointsPerClick(){
@@ -371,11 +381,9 @@ function upgradePointsPerClick(){
     if(points < cost) return;
     addPoints(-cost);
     let upgradeAmount = pointsPerButtonClick * upgradeRatio;
-    upgradeAmount = upgradeAmount > 1 ? upgradeAmount : 1;
-    incrementPointsPerButtonClick(upgradeAmount);
+    incrementPointsPerClick(upgradeAmount > 1 ? upgradeAmount : 1);
     shopCosts.pointsPerClick *= 1 + shopRatio;
-    updateCost(document.querySelector("#points-per-click"), shopCosts.pointsPerClick);
-    updateAmount(document.querySelector("#points-per-click"), upgradeAmount);
+    updateClickShopItem();
 }
 
 function upgradePointsMultiplier(){
@@ -385,11 +393,9 @@ function upgradePointsMultiplier(){
 
     addPoints(-cost);
     let upgradeAmount = pointsMultiplier * upgradeRatio;
-    upgradeAmount = upgradeAmount > 0.1 ? upgradeAmount : 0.1;
-    incrementPointsMultiplier(upgradeAmount);
+    incrementPointsMultiplier(upgradeAmount > 0.1 ? upgradeAmount : 0.1);
     shopCosts.pointsMultiplier *= 1 + shopRatio;
-    updateAmount(document.querySelector("#points-multiplier"), upgradeAmount);
-    updateCost(document.querySelector("#points-multiplier"), shopCosts.pointsMultiplier);
+    updateMultiplierShopItem();
 }
 
 function upgradePointsScroll(){
@@ -397,11 +403,9 @@ function upgradePointsScroll(){
     if(points < cost) return;
     addPoints(-cost);
     let upgradeAmount = pointsScroll * upgradeRatio;
-    upgradeAmount = upgradeAmount > 2 ? upgradeAmount : 2;
-    incrementPointsScroll(upgradeAmount);
+    incrementPointsScroll(upgradeAmount > 2 ? upgradeAmount : 2);
     shopCosts.pointsScroll *= 1 + shopRatio;
-    updateCost(document.querySelector("#points-scroll"), shopCosts.pointsScroll);
-    updateAmount(document.querySelector("#points-scroll"), upgradeAmount);
+    updateScrollShopItem();
 }
 
 function upgradePointsMovement(){
@@ -410,12 +414,9 @@ function upgradePointsMovement(){
     if(points < cost) return;
     addPoints(-cost);
     let upgradeAmount = pointMove * upgradeRatio;
-    upgradeAmount = upgradeAmount > 1 ? upgradeAmount : 1;
-    incrementPointsMovement(upgradeAmount);
+    incrementPointsMovement(upgradeAmount > 1 ? upgradeAmount : 1);
     shopCosts.pointsMovement *= 1 + shopRatio;
-    console.log("updating points movement figures")
-    updateCost(document.querySelector("#points-movement"), shopCosts.pointsMovement);
-    updateAmount(document.querySelector("#points-movement"), upgradeAmount);
+    updateMovementShopItem();
 }
 
 //todo: this logic might need changing, amount
@@ -424,13 +425,10 @@ function upgradePointsButtonClick(){
     if(points < cost) return;
     addPoints(-cost);
     let upgradeAmount = pointsPerButtonClick * upgradeRatio;
-    upgradeAmount = upgradeAmount > 10 ? upgradeAmount : 10;
-    incrementPointsPerButtonClick(upgradeAmount);
+    incrementPointsPerButtonClick(upgradeAmount > 10 ? upgradeAmount : 10);
     //todo: this below line may need to be added to other functions
-    upgradeAmount = upgradeAmount > 10 ? upgradeAmount : 10;
     shopCosts.pointsButtonClick *= 1 + shopRatio;
-    updateCost(document.querySelector("#points-per-button-click"), shopCosts.pointsButtonClick);
-    updateAmount(document.querySelector("#points-per-button-click"), upgradeAmount);
+    updateButtonClickItem();
 }
 
 function unlockGames(){
@@ -448,6 +446,9 @@ function updateCost(element, cost){
 function updateAmount(element, amount){
     console.log(element +", " + amount);
     element.querySelector(".upgrade-amount").innerHTML = amount.toFixed(2);
+}
+function updateCurrentAmount(element, amount){
+    element.querySelector(".current-amount").innerHTML = amount.toFixed(2);
 }
 
 function roundToDecimalPlaces(numToRound, decimalPlaces = 2){
@@ -478,27 +479,56 @@ gamesUnlock.addEventListener("click", unlockGames);
 
 //todo: refactor this into a function instead of repeating
 function setUpShop(){
-    updateCost(perSecondUpgrade, shopCosts.pointsPerSecond);
-    updateAmount(perSecondUpgrade, pointsPerSecond * upgradeRatio > 0.1 ? pointsPerSecond * upgradeRatio : 0.1);
-
-    updateCost(perClickUpgrade, shopCosts.pointsPerClick);
-    updateAmount(perClickUpgrade, pointsPerClick * upgradeRatio > 1 ? pointsPerClick * upgradeRatio : 1);
-
-    updateCost(perButtonClick, shopCosts.pointsButtonClick);
-    updateAmount(perButtonClick, pointsPerButtonClick * upgradeRatio > 10 ? pointsPerButtonClick * upgradeRatio : 10);
-
-    updateCost(movementUpgrade, shopCosts.pointsMovement);
-    updateAmount(movementUpgrade, pointMove * upgradeRatio > 1 ? pointMove * upgradeRatio : 1);
-
-    updateCost(scrollUpgrade, shopCosts.pointsScroll);
-    updateAmount(scrollUpgrade, pointsScroll * upgradeRatio > 2 ? pointsScroll * upgradeRatio : 2);
-
-    updateCost(multiplierUpgrade, shopCosts.pointsMultiplier);
-    updateAmount(multiplierUpgrade, pointsMultiplier * upgradeRatio > 0.1 ? pointsMultiplier * upgradeRatio : 0.1);
+    updatePerSecondShopItem();
+    updateClickShopItem();
+    updateButtonClickItem();
+    updateMovementShopItem();
+    updateScrollShopItem();
+    updateMultiplierShopItem();
 }
 
-const shopCosts = {
-    pointsPerSecond: 40,
+function updatePerSecondShopItem(){
+    updateCost(perSecondUpgrade, shopCosts.pointsPerSecond.cost);
+    updateAmount(perSecondUpgrade, pointsPerSecond * upgradeRatio > 0.1 ? pointsPerSecond * upgradeRatio : 0.1);
+    updateCurrentAmount(perSecondUpgrade, pointsPerSecond);
+}
+
+function updateClickShopItem(){
+    updateCost(perClickUpgrade, shopCosts.pointsPerClick);
+    updateAmount(perClickUpgrade, pointsPerClick * upgradeRatio > 1 ? pointsPerClick * upgradeRatio : 1);
+    updateCurrentAmount(perClickUpgrade, pointsPerClick);
+}
+
+function updateButtonClickItem(){
+    updateCost(perButtonClick, shopCosts.pointsButtonClick);
+    updateAmount(perButtonClick, pointsPerButtonClick * upgradeRatio > 10 ? pointsPerButtonClick * upgradeRatio : 10);
+    updateCurrentAmount(perButtonClick, pointsPerButtonClick);
+}
+
+function updateMovementShopItem(){
+    updateCost(movementUpgrade, shopCosts.pointsMovement);
+    updateAmount(movementUpgrade, pointMove * upgradeRatio > 1 ? pointMove * upgradeRatio : 1);
+    updateCurrentAmount(movementUpgrade, pointMove);
+}
+
+function updateScrollShopItem(){
+    updateCost(scrollUpgrade, shopCosts.pointsScroll);
+    updateAmount(scrollUpgrade, pointsScroll * upgradeRatio > 2 ? pointsScroll * upgradeRatio : 2);
+    updateCurrentAmount(scrollUpgrade, pointsScroll);
+}
+
+function updateMultiplierShopItem(){
+    updateCost(multiplierUpgrade, shopCosts.pointsMultiplier);
+    updateAmount(multiplierUpgrade, pointsMultiplier * upgradeRatio > 0.1 ? pointsMultiplier * upgradeRatio : 0.1);
+    updateCurrentAmount(multiplierUpgrade, pointsMultiplier);
+}
+
+let shopCosts = {
+    pointsPerSecond:
+        {
+            cost: 40,
+            amount: 1
+        },
     pointsPerClick: 10,
     pointsMultiplier: 40,
     pointsScroll: 40,
@@ -509,7 +539,6 @@ const shopCosts = {
 //todo: add in saving and loading for shop costs
 //todo: revamp save cookie to single cookie
 //todo: work on shop ui
-//todo: disable option
 
 
 setUpShop();

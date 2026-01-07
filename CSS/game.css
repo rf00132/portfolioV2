@@ -57,7 +57,7 @@
 
 #game-settings .content-box {
     min-height: 50px;
-    min-width: 240px;
+    width: 240px;
     justify-content: center;
     z-index: 10;
 }
