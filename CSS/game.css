@@ -35,6 +35,10 @@
     background: var(--main-accent);
     border: 6px solid var(--secondary-accent);
     clip-path: var(--tile-all-cutout);
+    left: 0;
+    right: 0;
+    margin-inline: auto;
+    width: fit-content;
 
     .content-box {
         clip-path: var(--box-bottom-left-cutout);
@@ -53,6 +57,7 @@
     flex-wrap: wrap;
     justify-content: center;
     padding: 0;
+    max-width: 240px;
 }
 
 #game-settings .content-box {
@@ -88,8 +93,16 @@ todo: add in points effect on mouse click
 todo: add in points effect on points display?
  */
 
+@media screen and (min-width: 700px) {
+    #game-settings {
+        max-width: 610px;
+    }
+}
+
 @media screen and (min-width: 800px) {
     #game-button {
         display: none;
     }
+
+
 }
