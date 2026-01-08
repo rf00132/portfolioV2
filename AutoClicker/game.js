@@ -428,7 +428,6 @@ function unlockGames(){
 }
 
 function updateCost(element, cost){
-    console.log(cost, formatNumber(cost))
     element.querySelector(".cost").innerHTML = formatNumber(cost);
     setShopCosts();
 }
