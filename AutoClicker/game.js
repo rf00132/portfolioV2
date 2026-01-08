@@ -428,6 +428,7 @@ function unlockGames(){
 }
 
 function updateCost(element, cost){
+    console.log(cost, formatNumber(cost))
     element.querySelector(".cost").innerHTML = formatNumber(cost);
     setShopCosts();
 }
@@ -445,7 +446,7 @@ function roundToDecimalPlaces(numToRound, decimalPlaces = 1){
 }
 
 function reduceAmountForDisplay(amountToReduce, reduction){
-    return roundToDecimalPlaces(amountToReduce, -1 * reduction)/Math.pow(10, reduction)
+    return roundToDecimalPlaces(amountToReduce, -1 * reduction).toFixed()/Math.pow(10, reduction)
 }
 
 const perSecondUpgrade = document.querySelector("#points-per-second");
