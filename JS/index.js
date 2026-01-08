@@ -34,7 +34,6 @@ function toggleMenu() {
 
 function onLoad(){
     if(loaded) return;
-    console.log(navBar);
     const resp = injectHTML("./htmlmodules/game.html",
         document.querySelector("nav")
     ).then(() =>
@@ -51,7 +50,6 @@ function onLoad(){
         menuButton.addEventListener('click', toggleMenu);
         return loadScript("./AutoClicker/game.js");
     });
-
     loaded = true;
 }
 let menuButton;

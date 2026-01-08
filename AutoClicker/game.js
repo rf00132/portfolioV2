@@ -311,7 +311,7 @@ function incrementPointsPerSecond(amount){
 
 function incrementPointsPerClick(amount){
     try {
-        pointsPerClick +=  roundToDecimalPlaces(amount);
+        pointsPerClick +=  roundToDecimalPlaces(amount, 2);
         if (pointsPerClickDisplay) {
             pointsPerClickDisplay.innerHTML = (pointsPerClick*pointsMultiplier).toFixed(0) + "/c";
         } else {
@@ -328,8 +328,8 @@ function incrementPointsPerButtonClick(amount){
     setPointsPerButtonClick();
 }
 
-function incrementPointsMovement(amount){
-    pointMove +=  roundToDecimalPlaces(amount);
+function incrementPointsMovement(){
+    pointMove +=  0.1;
     setPointsMovement();
 }
 
@@ -375,7 +375,7 @@ function upgradePointsPerClick(){
     const cost = shopCosts.pointsPerClick;
     if(points < cost) return;
     addPoints(-1 * cost);
-    let upgradeAmount = pointsPerButtonClick * upgradeRatio;
+    let upgradeAmount = pointsPerClick * upgradeRatio;
     incrementPointsPerClick(upgradeAmount > 1 ? upgradeAmount : 1);
     shopCosts.pointsPerClick *= 1 + shopRatio;
     updateClickShopItem();
@@ -383,7 +383,6 @@ function upgradePointsPerClick(){
 
 function upgradePointsMultiplier(){
     const cost = shopCosts.pointsMultiplier;
-    console.log(cost);
     if(points < cost) return;
     addPoints(-1 * cost);
     let upgradeAmount = pointsMultiplier * upgradeRatio;
@@ -404,11 +403,9 @@ function upgradePointsScroll(){
 
 function upgradePointsMovement(){
     const cost = shopCosts.pointsMovement;
-    console.log("upgrading points movement")
     if(points < cost) return;
     addPoints(-1 * cost);
-    let upgradeAmount = pointMove * upgradeRatio;
-    incrementPointsMovement(upgradeAmount > 1 ? upgradeAmount : 1);
+    incrementPointsMovement();
     shopCosts.pointsMovement *= 1 + shopRatio;
     updateMovementShopItem();
 }
@@ -433,7 +430,6 @@ function unlockGames(){
 function updateCost(element, cost){
     element.querySelector(".cost").innerHTML = formatNumber(cost);
     setShopCosts();
-    console.log(shopCosts.pointsPerSecond);
 }
 
 
@@ -449,7 +445,7 @@ function roundToDecimalPlaces(numToRound, decimalPlaces = 1){
 }
 
 function reduceAmountForDisplay(amountToReduce, reduction){
-    return roundToDecimalPlaces(points, -1 * reduction)/Math.pow(10, reduction)
+    return roundToDecimalPlaces(amountToReduce, -1 * reduction)/Math.pow(10, reduction)
 }
 
 const perSecondUpgrade = document.querySelector("#points-per-second");
