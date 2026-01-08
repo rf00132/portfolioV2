@@ -2,6 +2,7 @@
 //todo: absolute position settings menu is not scrollable, look into reorganising the html and css so it is
 //todo: cookies currently set to be session only
 //todo: make cookie pop up and saving cookies for longer optional
+//todo: adding a whole bunch of points after pressing the reset button, need to stop
 
 
 const perSecondUpgrade = document.querySelector("#points-per-second");
@@ -39,6 +40,10 @@ let shopCosts = {
 let gamesPage = false;
 
 let cookies = true;
+
+let idleInterval;
+let scrollInterval;
+let movementInterval;
 
 let pointsDisplay;
 let pointsPerSecondDisplay;
@@ -97,6 +102,24 @@ function gameOnLoad(){
             }
         } catch (error) {
             console.error("Error loading points:", error);
+        }
+
+        try {
+            const savedTotalPoints = parseInt(getTotalPoints());
+            if (savedTotalPoints !== null && savedTotalPoints > 0) {
+                totalPointsGained = savedTotalPoints;
+            }
+        } catch (error) {
+            console.error("Error loading total points:", error);
+        }
+
+        try {
+            const savedResetPoints = parseInt(getResetPoints());
+            if (savedResetPoints !== null && savedResetPoints > 0) {
+                resetPoints = savedResetPoints;
+            }
+        } catch (error) {
+            console.error("Error loading reset points:", error);
         }
 
         try {
@@ -184,9 +207,9 @@ function gameOnLoad(){
 
         document.addEventListener("mousemove", () => moved = true);
 
-        setInterval(addIdlePoints, 1000);
-        setInterval(addScrollPoints, 1000);
-        setInterval(addMovementPoints, 1000);
+        idleInterval = setInterval(addIdlePoints, 1000);
+        scrollInterval = setInterval(addScrollPoints, 1000);
+        movementInterval = setInterval(addMovementPoints, 1000);
     } catch (error) {
         console.error("Error in gameOnLoad:", error);
     }
@@ -194,16 +217,50 @@ function gameOnLoad(){
 
 function startReset(){
     if(totalPointsGained < 1000000) return;
+    console.log("starting reset...");
     resetPoints += (totalPointsGained/100000).toFixed();
-    totalPointsGained = 0;
-    pointsScroll = 0;
-    pointsPerSecond = 0;
-    pointsPerClick = 1;
-    pointsMultiplier = 1;
-    pointsPerButtonClick = 0;
-    pointMove = 0;
-    points = 0;
 
+    clearInterval(idleInterval);
+    clearInterval(scrollInterval);
+    clearInterval(movementInterval);
+    pointsScroll = 0;
+    setPointsScroll();
+    pointsPerSecond = 0;
+    savePointsPerSecond();
+    pointsPerClick = 1;
+    savePointsPerClick();
+    pointsMultiplier = 1;
+    savePointsMultiplier();
+    pointsPerButtonClick = 0;
+    setPointsPerButtonClick();
+    pointMove = 0;
+    setPointsMovement();
+    shopCosts = {
+        pointsPerSecond: 40,
+        pointsPerClick: 10,
+        pointsMultiplier: 40,
+        pointsScroll: 40,
+        pointsMovement: 40,
+        pointsButtonClick: 40
+    };
+    totalPointsGained = 0;
+    points = 0;
+    console.log(points);
+    savePoints();
+    console.log(points);
+    UpdateDisplay()
+    console.log(points);
+    setShopCosts();
+    console.log(points);
+    idleInterval = setInterval(addIdlePoints, 1000);
+    console.log(points);
+    scrollInterval = setInterval(addScrollPoints, 1000);
+    console.log(points);
+    movementInterval = setInterval(addMovementPoints, 1000);
+    console.log(points);
+    reset.style = "display: none;";
+
+    setResetPoints();
 }
 
 function addIdlePoints(){
@@ -227,11 +284,16 @@ function addMovementPoints(){
     moved = false;
 }
 function savePoints() {
-    setCookie('points', points); // Save for 30 days
+    setCookie('points', points);
+    setCookie('totalPoints', totalPointsGained)
 }
 
 function getPoints() {
     return getCookie('points');
+}
+
+function getTotalPoints(){
+    return getCookie('totalPoints');
 }
 
 function savePointsPerSecond() {
@@ -290,6 +352,14 @@ function setShopCosts(){
     setCookie("shopCosts", JSON.stringify(shopCosts));
 }
 
+function setResetPoints(){
+    setCookie("resetPoints", resetPoints);
+}
+
+function getResetPoints(){
+    return getCookie("resetPoints");
+}
+
 function incrementPointsMultiplier(amount){
     pointsMultiplier +=  roundToDecimalPlaces(amount);
     savePointsMultiplier();
@@ -301,7 +371,7 @@ function addPoints(amount) {
     try {
         const amountToAdd = amount * (resetPoints > 0 ? 1 + (resetPoints/5) : 1);
         points +=  amountToAdd;
-        totalPointsGained += amountToAdd;
+        if(amountToAdd > 0) totalPointsGained += amountToAdd;
         points = roundToDecimalPlaces(points);
         UpdateDisplay();
         if(amount !== 0) savePoints();
