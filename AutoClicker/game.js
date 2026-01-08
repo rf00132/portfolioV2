@@ -3,11 +3,22 @@
 //todo: cookies currently set to be session only
 //todo: make cookie pop up and saving cookies for longer optional
 
+
+const perSecondUpgrade = document.querySelector("#points-per-second");
+const perClickUpgrade = document.querySelector("#points-per-click");
+const multiplierUpgrade = document.querySelector("#points-multiplier");
+const scrollUpgrade = document.querySelector("#points-scroll");
+const movementUpgrade = document.querySelector("#points-movement");
+const perButtonClick = document.querySelector("#points-per-button-click");
+const gamesUnlock = document.querySelector("#games-page-unlock");
+const reset = document.querySelector("#points-reset");
+
 const upgradeRatio = 0.1;
 const shopRatio = 0.3;
 let scrolled = false;
 let moved = false;
 
+let totalPointsGained = 0;
 let points = 0;
 let pointsPerSecond = 0;
 let pointsPerClick = 0;
@@ -15,6 +26,7 @@ let pointsMultiplier = 0;
 let pointsPerButtonClick = 0;
 let pointsScroll = 0;
 let pointMove = 0;
+let resetPoints = 0;
 let shopCosts = {
     pointsPerSecond: 40,
     pointsPerClick: 10,
@@ -31,6 +43,7 @@ let cookies = true;
 let pointsDisplay;
 let pointsPerSecondDisplay;
 let pointsPerClickDisplay;
+let unlockedReset = false;
 
 // Function to save a value to a cookie
 function setCookie(name, value, days) {
@@ -179,6 +192,20 @@ function gameOnLoad(){
     }
 }
 
+function startReset(){
+    if(totalPointsGained < 1000000) return;
+    resetPoints += (totalPointsGained/100000).toFixed();
+    totalPointsGained = 0;
+    pointsScroll = 0;
+    pointsPerSecond = 0;
+    pointsPerClick = 1;
+    pointsMultiplier = 1;
+    pointsPerButtonClick = 0;
+    pointMove = 0;
+    points = 0;
+
+}
+
 function addIdlePoints(){
     try {
         if(pointsPerSecond === 0) return;
@@ -272,10 +299,16 @@ function incrementPointsMultiplier(amount){
 
 function addPoints(amount) {
     try {
-        points +=  amount;
+        const amountToAdd = amount * (resetPoints > 0 ? 1 + (resetPoints/5) : 1);
+        points +=  amountToAdd;
+        totalPointsGained += amountToAdd;
         points = roundToDecimalPlaces(points);
         UpdateDisplay();
         if(amount !== 0) savePoints();
+        if(totalPointsGained >= 1000000 && !unlockedReset) {
+            reset.style = "";
+            unlockedReset = true;
+        }
     } catch (error) {
         console.error("Error in addPoints:", error);
     }
@@ -448,15 +481,6 @@ function reduceAmountForDisplay(amountToReduce, reduction){
     return roundToDecimalPlaces(amountToReduce, -1 * reduction).toFixed()/Math.pow(10, reduction)
 }
 
-const perSecondUpgrade = document.querySelector("#points-per-second");
-const perClickUpgrade = document.querySelector("#points-per-click");
-const multiplierUpgrade = document.querySelector("#points-multiplier");
-const scrollUpgrade = document.querySelector("#points-scroll");
-const movementUpgrade = document.querySelector("#points-movement");
-const perButtonClick = document.querySelector("#points-per-button-click");
-const gamesUnlock = document.querySelector("#games-page-unlock");
-
-
 perSecondUpgrade.addEventListener("click", upgradePointsPerSecond);
 perClickUpgrade.addEventListener("click", upgradePointsPerClick);
 multiplierUpgrade.addEventListener("click", upgradePointsMultiplier);
@@ -464,6 +488,7 @@ scrollUpgrade.addEventListener("click", upgradePointsScroll);
 movementUpgrade.addEventListener("click", upgradePointsMovement);
 perButtonClick.addEventListener("click", upgradePointsButtonClick);
 gamesUnlock.addEventListener("click", unlockGames);
+reset.addEventListener("click", startReset);
 
 
 function setUpShop(){
