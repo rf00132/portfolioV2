@@ -49,6 +49,7 @@ let pointsDisplay;
 let pointsPerSecondDisplay;
 let pointsPerClickDisplay;
 let unlockedReset = false;
+let resetting = false;
 
 // Function to save a value to a cookie
 function setCookie(name, value, days) {
@@ -93,6 +94,15 @@ function gameOnLoad(){
         pointsPerSecondDisplay = document.querySelector("#pointsPerSecond");
         pointsPerClickDisplay = document.querySelector("#pointsPerClick");
         try {
+            const savedTotalPoints = parseInt(getTotalPoints());
+            if (savedTotalPoints !== null && savedTotalPoints > 0) {
+                totalPointsGained = savedTotalPoints;
+            }
+        } catch (error) {
+            console.error("Error loading total points:", error);
+        }
+
+        try {
             const savedPoints = parseInt(getPoints());
             if (savedPoints !== null && savedPoints > 0) {
                 addPoints(savedPoints);
@@ -102,15 +112,6 @@ function gameOnLoad(){
             }
         } catch (error) {
             console.error("Error loading points:", error);
-        }
-
-        try {
-            const savedTotalPoints = parseInt(getTotalPoints());
-            if (savedTotalPoints !== null && savedTotalPoints > 0) {
-                totalPointsGained = savedTotalPoints;
-            }
-        } catch (error) {
-            console.error("Error loading total points:", error);
         }
 
         try {
@@ -127,7 +128,7 @@ function gameOnLoad(){
             if (savedPointsPerSecond !== null && savedPointsPerSecond > 0) {
                 incrementPointsPerSecond(savedPointsPerSecond);
             } else {
-                incrementPointsPerSecond(0.1);
+                incrementPointsPerSecond(0);
             }
         } catch (error) {
             console.error("Error loading points per second:", error);
@@ -199,6 +200,10 @@ function gameOnLoad(){
 
         document.addEventListener("click", () => {
             try {
+                if(resetting) {
+                    resetting = false;
+                    return;
+                }
                 addPoints(pointsPerClick * pointsMultiplier);
             } catch (error) {
                 console.error("Error adding points:", error);
@@ -245,27 +250,23 @@ function startReset(){
     };
     totalPointsGained = 0;
     points = 0;
-    console.log(points);
     savePoints();
-    console.log(points);
     UpdateDisplay()
-    console.log(points);
     setShopCosts();
-    console.log(points);
     idleInterval = setInterval(addIdlePoints, 1000);
-    console.log(points);
     scrollInterval = setInterval(addScrollPoints, 1000);
-    console.log(points);
     movementInterval = setInterval(addMovementPoints, 1000);
-    console.log(points);
     reset.style = "display: none;";
 
     setResetPoints();
+    resetting = true;
+    console.log("reset complete");
 }
 
 function addIdlePoints(){
     try {
         if(pointsPerSecond === 0) return;
+        console.log("adding idle points", pointsPerSecond * pointsMultiplier);
         addPoints(pointsPerSecond * pointsMultiplier);
     } catch (error) {
         console.error("Error in addIdlePoints:", error);
@@ -274,12 +275,14 @@ function addIdlePoints(){
 
 function addScrollPoints(){
     if(pointsScroll === 0 || !scrolled) return;
+    console.log("adding scroll points", pointsScroll * pointsMultiplier);
     addPoints(pointsScroll * pointsMultiplier);
     scrolled = false;
 }
 
 function addMovementPoints(){
     if(pointMove === 0 || ! moved) return;
+    console.log("adding move points", pointMove * pointsMultiplier);
     addPoints(pointMove * pointsMultiplier);
     moved = false;
 }
@@ -369,9 +372,14 @@ function incrementPointsMultiplier(amount){
 
 function addPoints(amount) {
     try {
-        const amountToAdd = amount * (resetPoints > 0 ? 1 + (resetPoints/5) : 1);
+        let amountToAdd = amount;
+        console.log(amountToAdd);
         points +=  amountToAdd;
-        if(amountToAdd > 0) totalPointsGained += amountToAdd;
+        if(amountToAdd > 0) {
+            amountToAdd *= (resetPoints > 0 ? 1 + (resetPoints - resetPoints/2 + resetPoints/3 - resetPoints/4) : 1);
+            totalPointsGained += amountToAdd;
+        }
+        console.log(points);
         points = roundToDecimalPlaces(points);
         UpdateDisplay();
         if(amount !== 0) savePoints();
@@ -460,6 +468,8 @@ const unlocks = {
 };
 
 function onButtonClick(){
+
+    console.log("incrementing points from button click")
     addPoints(pointsPerButtonClick * pointsMultiplier);
 }
 
@@ -469,7 +479,7 @@ function upgradePointsPerSecond(){
     if(points < cost) return;
     addPoints(-1 * cost);
     let upgradeAmount = pointsPerSecond * upgradeRatio;
-    incrementPointsPerSecond(upgradeAmount > 0.1 ? upgradeAmount : 0.1);
+    incrementPointsPerSecond(upgradeAmount > 1 ? upgradeAmount : 1);
     shopCosts.pointsPerSecond *= 1 + shopRatio;
     updatePerSecondShopItem();
 }
@@ -572,7 +582,7 @@ function setUpShop(){
 
 function updatePerSecondShopItem(){
     updateCost(perSecondUpgrade, shopCosts.pointsPerSecond);
-    updateAmount(perSecondUpgrade, pointsPerSecond * upgradeRatio > 0.1 ? pointsPerSecond * upgradeRatio : 0.1);
+    updateAmount(perSecondUpgrade, pointsPerSecond * upgradeRatio > 1 ? pointsPerSecond * upgradeRatio : 1);
     updateCurrentAmount(perSecondUpgrade, pointsPerSecond);
 }
 
