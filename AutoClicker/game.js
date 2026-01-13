@@ -363,8 +363,8 @@ function getResetPoints(){
     return getCookie("resetPoints");
 }
 
-function incrementPointsMultiplier(amount){
-    pointsMultiplier +=  roundToDecimalPlaces(amount);
+function incrementPointsMultiplier(amount = 0.1){
+    pointsMultiplier +=  amount;
     savePointsMultiplier();
     incrementPointsPerClick(0);
     incrementPointsPerSecond(0);
@@ -439,8 +439,8 @@ function incrementPointsPerButtonClick(amount){
     setPointsPerButtonClick();
 }
 
-function incrementPointsMovement(){
-    pointMove +=  0.1;
+function incrementPointsMovement(amount){
+    pointMove +=  roundToDecimalPlaces(amount);
     setPointsMovement();
 }
 
