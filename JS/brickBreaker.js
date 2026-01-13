@@ -18,7 +18,7 @@ let paddleX = (canvas.width - paddleWidth) / 2;
 let rightPressed = false;
 let leftPressed = false;
 
-let interval = 0;
+let interval;
 
 function keyDownHandler(e) {
     if (e.key === "Right" || e.key === "ArrowRight") {
