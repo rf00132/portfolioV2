@@ -14,7 +14,7 @@ let dx = 2.5;
 let dy = -2.3;
 
 const colours = ["#d6b4e7", "#f59191", "#f0776c", "#eb4d4b", "#9954bb", "#727cf5", "#515365", "#4ecdc4", "#556270", "#ff6b6b"];
-let ballColour = colours[Math.floor(Math.random() * colours.length)];
+let ballColour = "#d6b4e7";
 
 
 let paddleX = (canvas.width - paddleWidth) / 2;
@@ -32,10 +32,10 @@ const brickPadding = 10;
 const brickOffsetTop = 30;
 const brickOffsetLeft = 30;
 
-const scoreColour = "#0095DD";
-const livesColour = "#0095DD";
-const paddleColour = "#0095DD";
-const brickColour = "#0095DD";
+const scoreColour = "#d6b4e7";
+const livesColour = "#d6b4e7";
+const paddleColour = "#d6b4e7";
+const brickColour = "#d6b4e7";
 
 const bricks = [];
 for (let c = 0; c < brickColumnCount; c++) {
