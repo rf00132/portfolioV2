@@ -48,7 +48,7 @@ function onLoad(){
         menuButton = document.querySelector('#menu-button');
         navBar = document.querySelector('.nav-bar');
         menuButton.addEventListener('click', toggleMenu);
-        return loadScript("./AutoClicker/game.js");
+        return loadScript("./JS/idleGame.js");
     });
     loaded = true;
 }
