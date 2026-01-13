@@ -1,5 +1,7 @@
 ﻿const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
+const runButton = document.getElementById("runButton");
+
 let x = canvas.width / 2;
 let y = canvas.height - 30;
 let dx = 2;
@@ -17,9 +19,6 @@ let rightPressed = false;
 let leftPressed = false;
 
 let interval = 0;
-
-document.addEventListener("keydown", keyDownHandler);
-document.addEventListener("keyup", keyUpHandler);
 
 function keyDownHandler(e) {
     if (e.key === "Right" || e.key === "ArrowRight") {
@@ -86,12 +85,6 @@ function startGame() {
     interval = setInterval(draw, 10);
 }
 
-const runButton = document.getElementById("runButton");
-runButton.addEventListener("click", () => {
-    startGame();
-    runButton.disabled = true;
-});
-
 function randomiseBallColour(){
     let newColour = colours[Math.floor(Math.random() * colours.length)];
     while(newColour === ballColour){
@@ -99,3 +92,11 @@ function randomiseBallColour(){
     }
     ballColour = newColour;
 }
+
+document.addEventListener("keydown", keyDownHandler);
+document.addEventListener("keyup", keyUpHandler);
+
+runButton.addEventListener("click", () => {
+    startGame();
+    runButton.disabled = true;
+});
