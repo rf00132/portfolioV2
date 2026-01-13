@@ -20,6 +20,22 @@ let leftPressed = false;
 
 let interval;
 
+const brickRowCount = 3;
+const brickColumnCount = 5;
+const brickWidth = 75;
+const brickHeight = 20;
+const brickPadding = 10;
+const brickOffsetTop = 30;
+const brickOffsetLeft = 30;
+
+const bricks = [];
+for (let c = 0; c < brickColumnCount; c++) {
+    bricks[c] = [];
+    for (let r = 0; r < brickRowCount; r++) {
+        bricks[c][r] = { x: 0, y: 0 };
+    }
+}
+
 function keyDownHandler(e) {
     if (e.key === "Right" || e.key === "ArrowRight") {
         rightPressed = true;
@@ -40,6 +56,7 @@ function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawBall();
     drawPaddle();
+    drawBricks();
 }
 
 function drawBall(){
@@ -50,6 +67,7 @@ function drawBall(){
     ctx.closePath();
     if (y + dy < ballRadius) {
         dy = -dy;
+        randomiseBallColour();
     } else if (y + dy > canvas.height - ballRadius) {
         alert("GAME OVER");
         document.location.reload();
@@ -57,6 +75,7 @@ function drawBall(){
     } else if (y + dy > canvas.height - ballRadius - paddleHeight) {
         if (x > paddleX && x < paddleX + paddleWidth) {
             dy = -dy;
+            randomiseBallColour();
         }
     }
     if (x + dx > canvas.width - ballRadius  || x + dx < ballRadius) {
@@ -78,6 +97,22 @@ function drawPaddle() {
         paddleX = Math.min(paddleX + 7, canvas.width - paddleWidth);
     } else if (leftPressed) {
         paddleX = Math.max(paddleX - 7, 0);
+    }
+}
+
+function drawBricks() {
+    for (let c = 0; c < brickColumnCount; c++) {
+        for (let r = 0; r < brickRowCount; r++) {
+            const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
+            const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
+            bricks[c][r].x = brickX;
+            bricks[c][r].y = brickY;
+            ctx.beginPath();
+            ctx.rect(brickX, brickY, brickWidth, brickHeight);
+            ctx.fillStyle = "#0095DD";
+            ctx.fill();
+            ctx.closePath();
+        }
     }
 }
 
