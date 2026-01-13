@@ -5,6 +5,25 @@
 canvas {
     background: var(--main-color);
     display: block;
-    margin: 0 auto;
+    margin: 16px auto;
 }
 
+#canvas-container{
+    display: block;
+}
+
+#runButton {
+    display: block;
+    margin: 5px auto;
+    color: var(--text-color-light);
+    background: var(--main-accent);
+    border: 3px solid var(--secondary-accent);
+    padding: 10px;
+    clip-path: var(--box-bottom-left-cutout);
+    font-size: 16px;
+}
+
+#runButton:hover {
+    cursor: pointer;
+    background-color: var(--tertiary-accent);
+}
