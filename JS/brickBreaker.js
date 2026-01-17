@@ -1,5 +1,4 @@
 ﻿//todo: add levels, faster speed, more bricks, less lives
-//todo: add powerups
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
