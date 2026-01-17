@@ -20,7 +20,7 @@ canvas {
     padding: 10px;
     clip-path: var(--box-bottom-left-cutout);
     font-size: 16px;
-    min-width: 130px;
+    min-width: 150px;
 }
 
 .buttons{

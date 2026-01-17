@@ -67,6 +67,9 @@ a {
         color: var(--text-color-light);
     }
 }
+button {
+    font-family: var(--font), sans-serif;
+}
 
 .nav-bar {
     background-color: var(--main-color);
