@@ -1,4 +1,8 @@
-﻿const canvas = document.getElementById("canvas");
+﻿//todo: replace win and loss alerts with drawing over canvas
+//todo: add levels, faster speed, more bricks, less lives
+//todo: add powerups
+
+const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 const runButton = document.getElementById("runButton");
 
@@ -10,8 +14,8 @@ const paddleWidth = 75;
 
 let x = canvas.width / 2;
 let y = canvas.height - ballRadius - paddleHeight;
-let dx = 2.5;
-let dy = -2.3;
+let dx = 2;
+let dy = -2;
 
 const colours = ["#d6b4e7", "#f59191", "#f0776c", "#eb4d4b", "#9954bb", "#727cf5", "#515365", "#4ecdc4", "#556270", "#ff6b6b"];
 let ballColour = "#d6b4e7";
@@ -92,6 +96,7 @@ function draw() {
     drawLives();
     drawBricks();
     checkForWin();
+    requestAnimationFrame(draw);
 }
 
 function checkForWin(){
@@ -180,10 +185,6 @@ function drawLives(){
     ctx.fillText(`Lives: ${lives}`, canvas.width - 65, 20);
 }
 
-function startGame() {
-    interval = setInterval(draw, 10);
-}
-
 function randomiseBallColour(){
     let newColour = colours[Math.floor(Math.random() * colours.length)];
     while(newColour === ballColour){
@@ -192,12 +193,21 @@ function randomiseBallColour(){
     ballColour = newColour;
 }
 
+
+//todo: update so it doesn't go off the edge
+
+function mouseMoveHandler(e) {
+    const relativeX = e.clientX - canvas.offsetLeft;
+    if (relativeX > 0 && relativeX < canvas.width) {
+        paddleX = Math.max(0, Math.min(relativeX - paddleWidth / 2, canvas.width - paddleWidth));
+    }
+}
+
 document.addEventListener("keydown", keyDownHandler);
 document.addEventListener("keyup", keyUpHandler);
+document.addEventListener("mousemove", mouseMoveHandler);
 
 runButton.addEventListener("click", () => {
-    startGame();
+    draw();
     runButton.disabled = true;
 });
-
-draw();
