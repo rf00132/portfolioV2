@@ -1,5 +1,4 @@
-﻿
-//todo: add levels, faster speed, more bricks, less lives
+﻿//todo: add levels, faster speed, more bricks, less lives
 //todo: add powerups
 
 const canvas = document.getElementById("canvas");
@@ -10,12 +9,19 @@ let score = 0;
 let lives = 3;
 let ballRadius = 10;
 const paddleHeight = 10;
-const paddleWidth = 75;
+let paddleWidth = 75;
+const basePaddleWidth = 75;
+let bonusPaddleWidth = 0;
 
 let x = canvas.width / 2;
 let y = canvas.height - ballRadius - paddleHeight;
 let dx = 2;
 let dy = -2;
+let bonusDx = 0;
+let bonusDy = 0;
+
+let trueDx = 0;
+let trueDy = 0;
 
 const colours = ["#d6b4e7", "#f59191", "#f0776c", "#eb4d4b", "#9954bb", "#727cf5", "#515365", "#4ecdc4", "#556270", "#ff6b6b"];
 let ballColour = "#d6b4e7";
@@ -27,6 +33,12 @@ let rightPressed = false;
 let leftPressed = false;
 
 let playing = false;
+
+let powerUpTimer = Math.floor(Math.random() * 10000);
+let lastFrameTime = Date.now();
+let resetPowerup = false;
+
+let powerUpType = Math.floor(Math.random() * 4);
 
 let randomise = false;
 
@@ -78,7 +90,7 @@ function collisionDetection() {
                     y > b.y &&
                     y < b.y + brickHeight
                 ) {
-                    dy = -dy;
+                    trueDy = -trueDy;
                     b.status = 0;
                     score++;
                     randomiseBallColour();
@@ -99,6 +111,7 @@ function draw() {
     drawScore();
     drawLives();
     drawBricks();
+    drawPowerup();
     checkForWin();
     requestAnimationFrame(draw);
 }
@@ -115,31 +128,31 @@ function drawBall(){
     ctx.fillStyle = ballColour;
     ctx.fill();
     ctx.closePath();
-    if (y + dy < ballRadius) {
-        dy = -dy;
+    if (y + trueDy < ballRadius) {
+        trueDy = -trueDy;
         randomiseBallColour();
-    } else if (y + dy > canvas.height - ballRadius) {
+    } else if (y + trueDy > canvas.height - ballRadius) {
         lives--;
         if(lives <= 0){
             drawGameOver();
             return;
         } else {
-            dy = -dy;
+            trueDy = -trueDy;
             randomiseBallColour();
         }
 
-    } else if (y + dy > canvas.height - ballRadius - paddleHeight) {
+    } else if (y + trueDy > canvas.height - ballRadius - paddleHeight) {
         if (x > paddleX && x < paddleX + paddleWidth) {
-            dy = -dy;
+            trueDy = -trueDy;
             randomiseBallColour();
         }
     }
-    if (x + dx > canvas.width - ballRadius  || x + dx < ballRadius) {
-        dx = -dx;
+    if (x + trueDx > canvas.width - ballRadius  || x + trueDx < ballRadius) {
+        trueDx = -trueDx;
         randomiseBallColour();
     }
-    x += dx;
-    y += dy;
+    x += trueDx;
+    y += trueDy;
 }
 
 function drawPaddle() {
@@ -194,7 +207,7 @@ function drawGameOver() {
     ctx.fillStyle = scoreColour;
     ctx.fillText(`Game Over!`, 155, 120);
 
-    ctx.fillText(`Score: ${score}`, 180, 200);
+    ctx.fillText(`Score: ${score}`, 175, 200);
 }
 
 function drawWinScreen() {
@@ -205,6 +218,150 @@ function drawWinScreen() {
     ctx.fillStyle = scoreColour;
     ctx.fillText(`You Win!`, 170, 120);
     ctx.fillText(`Score: ${score}`, 165, 200);
+}
+
+function drawPowerup(){
+
+    // Plus sign dimensions
+    const plusSize = 10;
+    const lineWidth = 4;
+    let colour = "#FFD700";
+    switch (powerUpType) {
+        case 0:
+            colour = "#FFD700";
+            break;
+        case 1:
+            colour = "#B1005D";
+            break;
+        case 2:
+            colour = "#DE00E4";
+            break;
+        case 3:
+            colour = "#E46C00";
+            break;
+    }
+
+    // Initialize powerup if it doesn't exist
+    if (!canvas.powerup || resetPowerup) {
+        canvas.powerup = {
+            x: Math.random() * (canvas.width - plusSize * 2) + plusSize,
+            y: 0,
+            width: plusSize * 2,
+            height: plusSize * 2,
+            active: true,
+            speed: 1
+        };
+        resetPowerup = false;
+    }
+
+    if(!canvas.powerup.active && lastFrameTime + powerUpTimer < Date.now()){
+        console.log("resetting powerup");
+        lastFrameTime = Date.now();
+        resetPowerUpTimer();
+        resetPowerup = true;
+        powerUpType = Math.floor(Math.random() * 4);
+        console.log(powerUpType);
+    }
+
+    if (!canvas.powerup.active) return;
+
+    // Draw horizontal line of plus sign
+    ctx.strokeStyle = colour; // Gold color
+    ctx.lineWidth = lineWidth;
+    ctx.beginPath();
+    ctx.moveTo(canvas.powerup.x - plusSize, canvas.powerup.y);
+    ctx.lineTo(canvas.powerup.x + plusSize, canvas.powerup.y);
+    ctx.stroke();
+
+    // Draw vertical line of plus sign
+    ctx.beginPath();
+    ctx.moveTo(canvas.powerup.x, canvas.powerup.y - plusSize);
+    ctx.lineTo(canvas.powerup.x, canvas.powerup.y + plusSize);
+    ctx.stroke();
+
+    canvas.powerup.y += canvas.powerup.speed;
+
+    if (canvas.powerup.y > canvas.height) {
+        canvas.powerup.active = false;
+        resetPowerUpTimer();
+    }
+
+    if (
+        canvas.powerup.x > paddleX &&
+        canvas.powerup.x < paddleX + paddleWidth &&
+        canvas.powerup.y > canvas.height - paddleHeight - 20 &&
+        canvas.powerup.y < canvas.height - paddleHeight
+    ) {
+        canvas.powerup.active = false;
+
+        switch (powerUpType) {
+            case 0:
+                console.log("moreScore!");
+                score += 10;
+                if(bonusPaddleWidth !== 0){
+                    bonusPaddleWidth = 0;
+                    changePaddleWidth()
+                }
+                if(bonusDx !== 0 || bonusDy !== 0){
+                    clearSpeed();
+                }
+                break;
+            case 1:
+                console.log("moreLives!");
+                lives++;
+                if(bonusPaddleWidth !== 0){
+                    bonusPaddleWidth = 0;
+                    changePaddleWidth()
+                }
+                if(bonusDx !== 0 || bonusDy !== 0){
+                    clearSpeed();
+                }
+                break;
+            case 2:
+                console.log("moreWidth!");
+                bonusPaddleWidth = 10;
+                clearSpeed();
+                changePaddleWidth()
+                if(bonusDx !== 0 || bonusDy !== 0){
+                    clearSpeed();
+                }
+                break;
+            case 3:
+                console.log("moreSpeed!");
+                bonusDx = 0.5;
+                bonusDy = 0.5;
+
+                setSpeed();
+
+                if(bonusPaddleWidth !== 0){
+                    bonusPaddleWidth = 0;
+                    changePaddleWidth()
+                }
+                break;
+        }
+
+
+        resetPowerUpTimer();
+    }
+}
+
+function resetPowerUpTimer(){
+    powerUpTimer = Math.floor(Math.random() * 10000);
+}
+
+function setSpeed(){
+    trueDx = dx + (dx > 0 ? bonusDx : -bonusDx);
+    trueDy = dy + (dy > 0 ? bonusDy : -bonusDy);
+}
+
+function clearSpeed(){
+    bonusDx = 0;
+    bonusDy = 0;
+    setSpeed();
+}
+
+function changePaddleWidth(){
+    paddleWidth = basePaddleWidth + bonusPaddleWidth;
 }
 
 function randomiseBallColour(){
@@ -232,4 +389,5 @@ runButton.addEventListener("click", () => {
     draw();
     runButton.disabled = true;
     runButton.style.display = "none";
+    setSpeed();
 });
