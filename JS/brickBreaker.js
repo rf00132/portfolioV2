@@ -1,8 +1,10 @@
-﻿//todo: add levels, faster speed, more bricks, less lives
+﻿//todo: add in ability to restart game
 
-const canvas = document.getElementById("canvas");
+const canvas = document.querySelector("#canvas");
 const ctx = canvas.getContext("2d");
-const runButton = document.getElementById("runButton");
+const easyButton = document.querySelector("#easy");
+const mediumButton = document.querySelector("#medium");
+const hardButton = document.querySelector("#hard");
 
 let score = 0;
 let lives = 3;
@@ -41,11 +43,11 @@ let powerUpType = Math.floor(Math.random() * 4);
 
 let randomise = false;
 
-const brickRowCount = 5;
-const brickColumnCount = 11;
-const brickWidth = 30;
-const brickHeight = 10;
-const brickPadding = 10;
+let brickRowCount = 5;
+let brickColumnCount = 11;
+let brickWidth = 30;
+let brickHeight = 10;
+let brickPadding = 10;
 const brickOffsetTop = 30;
 const brickOffsetLeft = 30;
 
@@ -55,12 +57,7 @@ const paddleColour = "#d6b4e7";
 const brickColour = "#d6b4e7";
 
 const bricks = [];
-for (let c = 0; c < brickColumnCount; c++) {
-    bricks[c] = [];
-    for (let r = 0; r < brickRowCount; r++) {
-        bricks[c][r] = { x: 0, y: 0, status: 1 };
-    }
-}
+
 
 function keyDownHandler(e) {
     if (e.key === "Right" || e.key === "ArrowRight") {
@@ -345,7 +342,7 @@ function drawPowerup(){
 }
 
 function resetPowerUpTimer(){
-    powerUpTimer = Math.floor(Math.random() * 10000);
+    powerUpTimer = Math.floor(Math.random() * 7000) + 3000;
 }
 
 function setSpeed(){
@@ -383,10 +380,57 @@ document.addEventListener("keydown", keyDownHandler);
 document.addEventListener("keyup", keyUpHandler);
 document.addEventListener("mousemove", mouseMoveHandler);
 
-runButton.addEventListener("click", () => {
+easyButton.addEventListener("click", () => {
+    lives = 3;
+    ballRadius = 10;
+    dx = 0.75;
+    dy = -0.75;
+    brickRowCount = 2;
+    brickColumnCount = 7;
+    brickWidth = 50;
+    brickHeight = 20;
+    brickPadding = 10;
+    startGame();
+});
+
+
+mediumButton.addEventListener("click", () => {
+    lives = 2;
+    ballRadius = 7.5;
+    dx = 1.25;
+    dy = -1.25;
+    brickRowCount = 4;
+    brickColumnCount = 9;
+    brickWidth = 40;
+    brickHeight = 15;
+    brickPadding = 8;
+    startGame();
+})
+
+hardButton.addEventListener("click", () => {
+    lives = 2;
+    ballRadius = 5;
+    dx = 2;
+    dy = -2;
+    brickRowCount = 6;
+    brickColumnCount = 12;
+    brickWidth = 30;
+    brickHeight = 10;
+    brickPadding = 6;
+    startGame();
+})
+
+function startGame(){
+    for (let c = 0; c < brickColumnCount; c++) {
+        bricks[c] = [];
+        for (let r = 0; r < brickRowCount; r++) {
+            bricks[c][r] = { x: 0, y: 0, status: 1 };
+        }
+    }
     playing = true;
     draw();
-    runButton.disabled = true;
-    runButton.style.display = "none";
+    easyButton.disabled = true;
+    mediumButton.disabled = true;
+    hardButton.disabled = true;
     setSpeed();
-});
+}
