@@ -17,17 +17,13 @@ glitchText.forEach(element => {
 });
 
 function toggleMenu() {
-    console.log("menuOpen");
-    console.log(menuOpen)
     if(menuOpen){
         menuButton.innerText = "Menu";
         navBar.setAttribute('style', '');
-        console.log("menu closed");
         menuOpen = false;
     } else {
         menuButton.innerText = "Close";
         navBar.setAttribute('style', 'right: 0 !important');
-        console.log("menu opened");
         menuOpen = true;
     }
 }

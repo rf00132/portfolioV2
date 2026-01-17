@@ -221,7 +221,6 @@ function gameOnLoad(){
 
 function startReset(){
     if(totalPointsGained < 1000000) return;
-    console.log("starting reset...");
     resetPoints += (totalPointsGained/100000).toFixed();
 
     clearInterval(idleInterval);
@@ -259,13 +258,11 @@ function startReset(){
 
     setResetPoints();
     resetting = true;
-    console.log("reset complete");
 }
 
 function addIdlePoints(){
     try {
         if(pointsPerSecond === 0) return;
-        console.log("adding idle points", pointsPerSecond * pointsMultiplier);
         addPoints(pointsPerSecond * pointsMultiplier);
     } catch (error) {
         console.error("Error in addIdlePoints:", error);
@@ -274,14 +271,12 @@ function addIdlePoints(){
 
 function addScrollPoints(){
     if(pointsScroll === 0 || !scrolled) return;
-    console.log("adding scroll points", pointsScroll * pointsMultiplier);
     addPoints(pointsScroll * pointsMultiplier);
     scrolled = false;
 }
 
 function addMovementPoints(){
     if(pointMove === 0 || ! moved) return;
-    console.log("adding move points", pointMove * pointsMultiplier);
     addPoints(pointMove * pointsMultiplier);
     moved = false;
 }
@@ -372,13 +367,11 @@ function incrementPointsMultiplier(amount = 0.1){
 function addPoints(amount) {
     try {
         let amountToAdd = amount;
-        console.log(amountToAdd);
         points +=  amountToAdd;
         if(amountToAdd > 0) {
             amountToAdd *= (resetPoints > 0 ? 1 + (resetPoints - resetPoints/2 + resetPoints/3 - resetPoints/4) : 1);
             totalPointsGained += amountToAdd;
         }
-        console.log(points);
         points = roundToDecimalPlaces(points);
         UpdateDisplay();
         if(amount !== 0) savePoints();
@@ -467,14 +460,11 @@ const unlocks = {
 };
 
 function onButtonClick(){
-
-    console.log("incrementing points from button click")
     addPoints(pointsPerButtonClick * pointsMultiplier);
 }
 
 function upgradePointsPerSecond(){
     const cost = shopCosts.pointsPerSecond;
-    console.log("upgrading points per second")
     if(points < cost) return;
     addPoints(-1 * cost);
     let upgradeAmount = pointsPerSecond * upgradeRatio;
