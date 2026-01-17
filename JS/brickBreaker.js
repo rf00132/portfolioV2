@@ -1,4 +1,4 @@
-﻿//todo: replace win and loss alerts with drawing over canvas
+﻿
 //todo: add levels, faster speed, more bricks, less lives
 //todo: add powerups
 
@@ -8,7 +8,7 @@ const runButton = document.getElementById("runButton");
 
 let score = 0;
 let lives = 3;
-const ballRadius = 10;
+let ballRadius = 10;
 const paddleHeight = 10;
 const paddleWidth = 75;
 
@@ -26,7 +26,7 @@ let paddleX = (canvas.width - paddleWidth) / 2;
 let rightPressed = false;
 let leftPressed = false;
 
-let interval;
+let playing = false;
 
 let randomise = false;
 
@@ -90,8 +90,10 @@ function collisionDetection() {
 }
 
 function draw() {
+    if(!playing) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawBall();
+    if(lives <= 0) return;
     drawPaddle();
     collisionDetection();
     drawScore();
@@ -103,9 +105,7 @@ function draw() {
 
 function checkForWin(){
     if (score === brickRowCount * brickColumnCount) {
-        alert("YOU WIN, CONGRATULATIONS!");
-        document.location.reload();
-        clearInterval(interval);
+        drawWinScreen();
     }
 }
 
@@ -120,10 +120,9 @@ function drawBall(){
         randomiseBallColour();
     } else if (y + dy > canvas.height - ballRadius) {
         lives--;
-        if(lives === 0){
-            alert("GAME OVER");
-            document.location.reload();
-            clearInterval(interval);
+        if(lives <= 0){
+            drawGameOver();
+            return;
         } else {
             dy = -dy;
             randomiseBallColour();
@@ -187,6 +186,27 @@ function drawLives(){
     ctx.fillText(`Lives: ${lives}`, canvas.width - 65, 20);
 }
 
+function drawGameOver() {
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    playing = false;
+    ctx.font = "32px Arial";
+    ctx.fillStyle = scoreColour;
+    ctx.fillText(`Game Over!`, 155, 120);
+
+    ctx.fillText(`Score: ${score}`, 180, 200);
+}
+
+function drawWinScreen() {
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    playing = false;
+    ctx.font = "32px Arial";
+    ctx.fillStyle = scoreColour;
+    ctx.fillText(`You Win!`, 170, 120);
+    ctx.fillText(`Score: ${score}`, 165, 200);
+}
+
 function randomiseBallColour(){
     if(!randomise) return;
     let newColour = colours[Math.floor(Math.random() * colours.length)];
@@ -195,9 +215,6 @@ function randomiseBallColour(){
     }
     ballColour = newColour;
 }
-
-
-//todo: update so it doesn't go off the edge
 
 function mouseMoveHandler(e) {
     const relativeX = e.clientX - canvas.offsetLeft;
@@ -211,6 +228,8 @@ document.addEventListener("keyup", keyUpHandler);
 document.addEventListener("mousemove", mouseMoveHandler);
 
 runButton.addEventListener("click", () => {
+    playing = true;
     draw();
     runButton.disabled = true;
+    runButton.style.display = "none";
 });
