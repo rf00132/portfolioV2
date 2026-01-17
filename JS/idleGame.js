@@ -51,10 +51,10 @@ let unlockedReset = false;
 let resetting = false;
 
 // Function to save a value to a cookie
-function setCookie(name, value, days) {
-    if(!cookies) return;
+function setCookie(name, value) {
     let expires = "";
-    if (days) {
+    if (cookies) {
+        const days = 30;
         const date = new Date();
         date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
         expires = "; expires=" + date.toUTCString();
@@ -64,7 +64,6 @@ function setCookie(name, value, days) {
 
 // Function to get a value from a cookie
 function getCookie(name) {
-    if(!cookies) return;
     const nameEQ = name + "=";
     const ca = document.cookie.split(';');
     for (let i = 0; i < ca.length; i++) {
