@@ -28,6 +28,8 @@ let leftPressed = false;
 
 let interval;
 
+let randomise = false;
+
 const brickRowCount = 5;
 const brickColumnCount = 11;
 const brickWidth = 30;
@@ -186,6 +188,7 @@ function drawLives(){
 }
 
 function randomiseBallColour(){
+    if(!randomise) return;
     let newColour = colours[Math.floor(Math.random() * colours.length)];
     while(newColour === ballColour){
         newColour = colours[Math.floor(Math.random() * colours.length)];
