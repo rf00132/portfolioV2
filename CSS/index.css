@@ -195,163 +195,167 @@ button {
 }
 
 
-    #menu-button, #game-button{
+#menu-button, #game-button{
+    position: absolute;
+    top: 0;
+    margin: 4px 8px;
+    background-color: var(--main-accent);
+    color: var(--text-color-light);
+    clip-path: var(--box-bottom-left-cutout);
+    padding: var(--box-padding);
+    border: solid 3px var(--secondary-accent);
+    border-radius: 2px;
+    width: 50px;
+    z-index: 115;
+}
+
+#menu-button{
+    right: 0;
+}
+
+
+
+
+.ui-box:hover, #menu-button:hover{
+    background-color: var(--tertiary-accent);
+    cursor: pointer;
+
+
+}
+
+.content-box{
+    clip-path: var(--box-top-right-cutout);
+    background-color: var(--tertiary-accent);
+    color: var(--text-color-light);
+    --low-cutout-short: 10%;
+    margin: 8px 16px;
+    padding: 16px;
+    min-height: 170px;
+    position: relative;
+    border-width: 6px;
+
+    h2{
         position: absolute;
-        top: 0;
-        margin: 4px 8px;
-        background-color: var(--main-accent);
-        color: var(--text-color-light);
-        clip-path: var(--box-bottom-left-cutout);
-        padding: var(--box-padding);
-        border: solid 3px var(--secondary-accent);
-        border-radius: 2px;
-        width: 50px;
-        z-index: 115;
     }
 
-    #menu-button{
-        right: 0;
-    }
-
-
-
-
-    .ui-box:hover, #menu-button:hover{
-        background-color: var(--tertiary-accent);
-        cursor: pointer;
-
-
-    }
-
-    .content-box{
-
-        clip-path: var(--box-top-right-cutout);
-        background-color: var(--tertiary-accent);
-        color: var(--text-color-light);
-        --low-cutout-short: 10%;
-        margin: 8px 16px;
-        padding: 16px;
-        min-height: 170px;
+    p{
         position: relative;
-        border-width: 6px;
+    }
+}
 
+#games-content .content-box:hover{
+    background-color: var(--main-accent);
+    cursor: pointer;
+}
+
+@media screen and (max-width: 250px) {
+    .content-box{
+        margin: 4px 0;
+    }
+
+    main .content-box:nth-child(n){
+        width: 100%;
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
+@media screen and (min-width: 370px) {
+    h1 {
+        margin-top: 21px;
+    }
+
+}
+
+
+@media screen and (min-width: 800px){
+    .nav-bar{
+        flex-direction: row;
+        position: inherit;
+        padding: 8px 0 8px 0;
+        margin-left: -15px;
+        width: calc(100% + 30px);
+
+        justify-content: center;
+    }
+
+    nav {
+        top: 0;
+        position: sticky;
+    }
+
+
+    .ui-box:nth-child(4n - 3){
+        clip-path: var(--box-bottom-left-cutout);
+    }
+
+    .ui-box:nth-child(4n - 1){
+        clip-path: var(--box-top-left-cutout);
+    }
+
+    .ui-box:nth-child(4n){
+        clip-path: var(--box-bottom-right-cutout);
+    }
+
+    .ui-box:nth-child(4n-2){
+        clip-path: var(--box-top-right-cutout);
+    }
+
+    #menu-button {
+        display: none;
+    }
+
+
+
+    .content-box {
+        max-width: min(40%, 500px);
+        position: relative;
+    }
+
+
+    .content-box:nth-child(4n){
+        clip-path: var(--tile-top-left-cutout);
         h2{
-            position: absolute;
-        }
-
-        p{
-            position: relative;
-        }
-    }
-
-    @media screen and (max-width: 250px) {
-        .content-box{
-            margin: 4px 0;
-        }
-
-        main .content-box:nth-child(n){
-            width: 100%;
-            padding-left: 0;
-            padding-right: 0;
-        }
-    }
-
-    @media screen and (min-width: 370px) {
-        h1 {
-            margin-top: 21px;
-        }
-
-    }
-
-
-    @media screen and (min-width: 800px){
-        .nav-bar{
-            flex-direction: row;
-            position: inherit;
-            padding: 8px 0 8px 0;
-            margin-left: -15px;
-            width: calc(100% + 30px);
-
-            justify-content: center;
-        }
-
-        nav {
             top: 0;
-            position: sticky;
+            right: 16px;
+            left: unset;
+        }
+        p{
+            bottom: 0;
+            left: 16px;
+            padding-left: var(--low-cutout);
+            padding-right: calc(var(--low-cutout) * 2);
+            padding-top: calc(var(--low-cutout) * 2);
+            text-align: left;
         }
 
 
-        .ui-box:nth-child(4n - 3){
-            clip-path: var(--box-bottom-left-cutout);
+    }
+
+
+
+    .content-box:nth-child(4n-1){
+        clip-path: var(--tile-top-right-cutout);
+        h2{
+            top: 0;
+            left: 16px;
         }
-
-        .ui-box:nth-child(4n - 1){
-            clip-path: var(--box-top-left-cutout);
-        }
-
-        .ui-box:nth-child(4n){
-            clip-path: var(--box-bottom-right-cutout);
-        }
-
-        .ui-box:nth-child(4n-2){
-            clip-path: var(--box-top-right-cutout);
-        }
-
-        #menu-button {
-            display: none;
-        }
-
-
-
-        .content-box {
-            max-width: min(40%, 500px);
-            position: relative;
-        }
-
-
-        .content-box:nth-child(4n){
-            clip-path: var(--tile-top-left-cutout);
-            h2{
-                top: 0;
-                right: 16px;
-                left: unset;
-            }
-            p{
-                bottom: 0;
-                left: 16px;
-                padding-left: var(--low-cutout);
-                padding-right: calc(var(--low-cutout) * 2);
-                padding-top: calc(var(--low-cutout) * 2);
-                text-align: left;
-            }
-
-
-        }
-
-
-
-        .content-box:nth-child(4n-1){
-            clip-path: var(--tile-top-right-cutout);
-            h2{
-                top: 0;
-                left: 16px;
-            }
-            p{
-                bottom: 0;
-                right: 16px;
-                padding-top: calc(var(--low-cutout) * 2);
-                padding-right: var(--low-cutout);
-                padding-left: calc(var(--low-cutout) * 2);
-                text-align: right;
-            }
-        }
-
-        .content-box:nth-child(4n-2){
-            clip-path: var(--tile-top-right-cutout);
-        }
-
-        .content-box:nth-child(4n-3){
-            clip-path: var(--tile-top-left-cutout);
+        p{
+            bottom: 0;
+            right: 16px;
+            padding-top: calc(var(--low-cutout) * 2);
+            padding-right: var(--low-cutout);
+            padding-left: calc(var(--low-cutout) * 2);
+            text-align: right;
         }
     }
+
+    .content-box:nth-child(4n-2){
+        clip-path: var(--tile-top-right-cutout);
+    }
+
+    .content-box:nth-child(4n-3){
+        clip-path: var(--tile-top-left-cutout);
+    }
+}
 
