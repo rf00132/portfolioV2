@@ -1,7 +1,7 @@
 ﻿//todo: rebalance shop upgrade ratio formula
 //todo: absolute position settings menu is not scrollable, look into reorganising the html and css so it is
-//todo: cookies currently set to be session only
 //todo: make cookie pop up and saving cookies for longer optional
+//todo: add in upgrades for brick breaker v
 
 const perSecondUpgrade = document.querySelector("#points-per-second");
 const perClickUpgrade = document.querySelector("#points-per-click");
@@ -9,7 +9,7 @@ const multiplierUpgrade = document.querySelector("#points-multiplier");
 const scrollUpgrade = document.querySelector("#points-scroll");
 const movementUpgrade = document.querySelector("#points-movement");
 const perButtonClick = document.querySelector("#points-per-button-click");
-const gamesUnlock = document.querySelector("#games-page-unlock");
+//const gamesUnlock = document.querySelector("#games-page-unlock");
 const reset = document.querySelector("#points-reset");
 
 const upgradeRatio = 0.1;
@@ -212,7 +212,7 @@ function gameOnLoad(){
 
         idleInterval = setInterval(addIdlePoints, 1000);
         scrollInterval = setInterval(addScrollPoints, 1000);
-        movementInterval = setInterval(addMovementPoints, 1000);
+        movementInterval = setInterval(addMovementPoints, 100);
     } catch (error) {
         console.error("Error in gameOnLoad:", error);
     }
@@ -252,7 +252,7 @@ function startReset(){
     setShopCosts();
     idleInterval = setInterval(addIdlePoints, 1000);
     scrollInterval = setInterval(addScrollPoints, 1000);
-    movementInterval = setInterval(addMovementPoints, 1000);
+    movementInterval = setInterval(addMovementPoints, 100);
     reset.style = "display: none;";
 
     setResetPoints();
@@ -276,7 +276,7 @@ function addScrollPoints(){
 
 function addMovementPoints(){
     if(pointMove === 0 || ! moved) return;
-    addPoints(pointMove * pointsMultiplier);
+    addPoints(pointMove * pointsMultiplier/10);
     moved = false;
 }
 function savePoints() {
@@ -506,7 +506,8 @@ function upgradePointsMovement(){
     const cost = shopCosts.pointsMovement;
     if(points < cost) return;
     addPoints(-1 * cost);
-    incrementPointsMovement();
+    let upgradeAmount = pointMove * upgradeRatio;
+    incrementPointsMovement(upgradeAmount > 10 ? upgradeAmount : 10);
     shopCosts.pointsMovement *= 1 + shopRatio;
     updateMovementShopItem();
 }
@@ -525,6 +526,7 @@ function unlockGames(){
     unlocks.games = true;
     gamesPage = true;
     document.querySelector("#games-page-unlock").disabled = true;
+    document.querySelector("#games-page-unlock").style.display = "none";
     updateCost(document.querySelector("#games-page-unlock"), "Sold Out");
 }
 
@@ -555,7 +557,7 @@ multiplierUpgrade.addEventListener("click", upgradePointsMultiplier);
 scrollUpgrade.addEventListener("click", upgradePointsScroll);
 movementUpgrade.addEventListener("click", upgradePointsMovement);
 perButtonClick.addEventListener("click", upgradePointsButtonClick);
-gamesUnlock.addEventListener("click", unlockGames);
+//gamesUnlock.addEventListener("click", unlockGames);
 reset.addEventListener("click", startReset);
 
 
@@ -610,7 +612,7 @@ function updateMultiplierShopItem(){
 
 function formatNumber(num) {
     let formattedNum;
-    if(num < Math.pow(10, 3)) formattedNum = num.toFixed(1);
+    if(num < Math.pow(10, 4)) formattedNum = num.toFixed(1);
     else if (num < Math.pow(10, 7)) formattedNum = reduceAmountForDisplay(num, 3) + "k";
     else if (num < Math.pow(10, 10)) formattedNum = reduceAmountForDisplay(num, 6) + "m";
     else if (num < Math.pow(10, 13)) formattedNum = reduceAmountForDisplay(num, 9) + "b";
