@@ -2,8 +2,6 @@
 //todo: absolute position settings menu is not scrollable, look into reorganising the html and css so it is
 //todo: cookies currently set to be session only
 //todo: make cookie pop up and saving cookies for longer optional
-//todo: adding a whole bunch of points after pressing the reset button, need to stop
-
 
 const perSecondUpgrade = document.querySelector("#points-per-second");
 const perClickUpgrade = document.querySelector("#points-per-click");
@@ -28,12 +26,13 @@ let pointsPerButtonClick = 0;
 let pointsScroll = 0;
 let pointMove = 0;
 let resetPoints = 0;
+
 let shopCosts = {
-    pointsPerSecond: 40,
+    pointsPerSecond: 20,
     pointsPerClick: 10,
-    pointsMultiplier: 40,
-    pointsScroll: 40,
-    pointsMovement: 40,
+    pointsMultiplier: 100,
+    pointsScroll: 50,
+    pointsMovement: 30,
     pointsButtonClick: 40
 };
 
