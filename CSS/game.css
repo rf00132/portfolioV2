@@ -39,6 +39,7 @@
     right: 0;
     margin-inline: auto;
     width: fit-content;
+    z-index: 20;
 
     .content-box {
         clip-path: var(--box-bottom-left-cutout);

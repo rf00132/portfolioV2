@@ -28,6 +28,7 @@
     --tile-all-cutout: polygon(0 var(--low-cutout-short),0 var(--high-cutout-short),var(--low-cutout-short) 100%, var(--high-cutout-short) 100%, 100% var(--high-cutout-short), 100% var(--low-cutout-short),var(--high-cutout-short) 0, var(--low-cutout-short) 0);
 }
 
+
 body {
     margin: 0;
     color: var(--text-color-dark);
@@ -74,10 +75,10 @@ button {
 .nav-bar {
     background-color: var(--main-color);
     width: 140px;
-    height: 100%;
+    height: calc(100% - 64px);
     top: 0;
     right: -240px;
-    z-index: 5;
+    z-index: 105;
     padding: 64px 0 0 0;
 
     display: flex;

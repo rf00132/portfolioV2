@@ -412,7 +412,7 @@ function incrementPointsPerSecond(amount){
         if (pointsPerSecondDisplay) {
             pointsPerSecondDisplay.innerHTML = (pointsPerSecond*pointsMultiplier).toFixed(1) + "/s";
         } else {
-            console.error("pointsPerSecondDisplay is null or undefined");
+            //console.error("pointsPerSecondDisplay is null or undefined");
         }
         if(amount !== 0) savePointsPerSecond();
     } catch (error) {
@@ -426,7 +426,7 @@ function incrementPointsPerClick(amount){
         if (pointsPerClickDisplay) {
             pointsPerClickDisplay.innerHTML = (pointsPerClick*pointsMultiplier).toFixed(0) + "/c";
         } else {
-            console.error("pointsPerClickDisplay is null or undefined");
+            //console.error("pointsPerClickDisplay is null or undefined");
         }
         if(amount !== 0) savePointsPerClick();
     } catch (error) {

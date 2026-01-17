@@ -40,11 +40,13 @@ function onLoad(){
         injectHTML("./htmlmodules/head.html",
             document.querySelector("head")
         )
-    ).then(() =>
+    )
+    /* .then(() =>
         injectHTML("./htmlmodules/footer.html",
             document.querySelector("footer")
         )
-    ).then(() => {
+    )*/
+    .then(() => {
         menuButton = document.querySelector('#menu-button');
         navBar = document.querySelector('.nav-bar');
         menuButton.addEventListener('click', toggleMenu);
