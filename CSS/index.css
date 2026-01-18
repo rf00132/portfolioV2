@@ -160,9 +160,6 @@ button {
         padding-top: calc(var(--low-cutout) * 2);
         text-align: left;
     }
-    p.layers::before, p.layers::after{
-        padding-top: 20px;
-    }
 }
 
 .ui-box{
@@ -219,8 +216,43 @@ button {
 .ui-box:hover, #menu-button:hover{
     background-color: var(--tertiary-accent);
     cursor: pointer;
+}
 
+#games-content .content-box{
+    padding: 0;
 
+    a {
+        margin-top: -13px;
+        padding-top: 13px;
+    }
+}
+
+#games-content .content-box:nth-child(4n-3){
+    p{
+        padding-bottom: calc(var(--low-cutout) * 2.5);
+    }
+}
+
+#games-content .content-box:nth-child(4n-2){
+    p{
+        padding-bottom: calc(var(--low-cutout) * 2.5);
+    }
+}
+
+#games-content .content-box:nth-child(4n-1){
+    p{
+        padding-left: 0;
+        padding-right: calc(var(--low-cutout) * 2);
+        padding-top: calc(var(--low-cutout) * 2.5);
+    }
+}
+
+#games-content .content-box:nth-child(4n){
+    p{
+        padding-top: calc(var(--low-cutout) * 2.5);
+        padding-left: var(--low-cutout);
+        padding-bottom: 6px;
+    }
 }
 
 .content-box{
@@ -240,6 +272,13 @@ button {
 
     p{
         position: relative;
+    }
+    a{
+        display: block;
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
     }
 }
 
