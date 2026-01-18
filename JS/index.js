@@ -37,10 +37,11 @@ function onLoad(){
             document.querySelector("head")
         )
     )
-    /* .then(() =>
-        injectHTML("./htmlmodules/footer.html",
-            document.querySelector("footer")
-        )
+    /*
+    .then(() =>
+    injectHTML("./htmlmodules/footer.html",
+        document.querySelector("footer")
+    )
     )*/
     .then(() => {
         menuButton = document.querySelector('#menu-button');

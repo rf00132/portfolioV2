@@ -1,4 +1,4 @@
-﻿//todo: add in ability to restart game
+﻿//todo: find glitch with speed reset on power up collection causing ball to change direction
 
 const canvas = document.querySelector("#canvas");
 const ctx = canvas.getContext("2d");
