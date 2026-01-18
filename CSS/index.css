@@ -22,7 +22,6 @@
     --box-top-left-cutout: polygon(0 var(--low-cutout), 0 100%, 100% 100%, 100% 0, var(--low-cutout) 0);
 
     --tile-top-right-cutout: polygon(0 0, 0 var(--high-cutout-short),var(--low-cutout-short) 100%, 100% 100%, 100% var(--low-cutout-short), var(--high-cutout-short) 0);
-
     --tile-top-left-cutout: polygon(0 var(--low-cutout-short), 0 100%,var(--high-cutout-short) 100%, 100% var(--high-cutout-short), 100% 0, var(--low-cutout-short) 0);
 
     --tile-all-cutout: polygon(0 var(--low-cutout-short),0 var(--high-cutout-short),var(--low-cutout-short) 100%, var(--high-cutout-short) 100%, 100% var(--high-cutout-short), 100% var(--low-cutout-short),var(--high-cutout-short) 0, var(--low-cutout-short) 0);
