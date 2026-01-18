@@ -7,6 +7,7 @@ const mediumButton = document.querySelector("#medium");
 const hardButton = document.querySelector("#hard");
 
 let score = 0;
+let bricksBroken = 0;
 let lives = 3;
 let ballRadius = 10;
 const paddleHeight = 10;
@@ -17,7 +18,7 @@ let bonusPaddleWidth = 0;
 let x = canvas.width / 2;
 let y = canvas.height - ballRadius - paddleHeight;
 let dx = 2;
-let dy = -2;
+let dy = 2;
 let bonusDx = 0;
 let bonusDy = 0;
 
@@ -34,6 +35,7 @@ let rightPressed = false;
 let leftPressed = false;
 
 let playing = false;
+let stopped = false;
 
 let powerUpTimer = Math.floor(Math.random() * 10000);
 let lastFrameTime = Date.now();
@@ -89,6 +91,7 @@ function collisionDetection() {
                     trueDy = -trueDy;
                     b.status = 0;
                     score++;
+                    bricksBroken++;
                     randomiseBallColour();
 
                 }
@@ -109,11 +112,12 @@ function draw() {
     drawBricks();
     drawPowerup();
     checkForWin();
+    if(stopped) return;
     requestAnimationFrame(draw);
 }
 
 function checkForWin(){
-    if (score === brickRowCount * brickColumnCount) {
+    if (bricksBroken === brickRowCount * brickColumnCount) {
         drawWinScreen();
     }
 }
@@ -196,7 +200,6 @@ function drawLives(){
 }
 
 function drawGameOver() {
-
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     playing = false;
     ctx.font = "32px Arial";
@@ -207,7 +210,6 @@ function drawGameOver() {
 }
 
 function drawWinScreen() {
-
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     playing = false;
     ctx.font = "32px Arial";
@@ -217,8 +219,6 @@ function drawWinScreen() {
 }
 
 function drawPowerup(){
-
-    // Plus sign dimensions
     const plusSize = 10;
     const lineWidth = 4;
     let colour = "#FFD700";
@@ -237,7 +237,6 @@ function drawPowerup(){
             break;
     }
 
-    // Initialize powerup if it doesn't exist
     if (!canvas.powerup || resetPowerup) {
         canvas.powerup = {
             x: Math.random() * (canvas.width - plusSize * 2) + plusSize,
@@ -261,7 +260,6 @@ function drawPowerup(){
 
     if (!canvas.powerup.active) return;
 
-    // Draw horizontal line of plus sign
     ctx.strokeStyle = colour; // Gold color
     ctx.lineWidth = lineWidth;
     ctx.beginPath();
@@ -269,7 +267,6 @@ function drawPowerup(){
     ctx.lineTo(canvas.powerup.x + plusSize, canvas.powerup.y);
     ctx.stroke();
 
-    // Draw vertical line of plus sign
     ctx.beginPath();
     ctx.moveTo(canvas.powerup.x, canvas.powerup.y - plusSize);
     ctx.lineTo(canvas.powerup.x, canvas.powerup.y + plusSize);
@@ -316,7 +313,6 @@ function drawPowerup(){
             case 2:
                 console.log("moreWidth!");
                 bonusPaddleWidth = 10;
-                clearSpeed();
                 changePaddleWidth()
                 if(bonusDx !== 0 || bonusDy !== 0){
                     clearSpeed();
@@ -346,8 +342,8 @@ function resetPowerUpTimer(){
 }
 
 function setSpeed(){
-    trueDx = dx + (dx > 0 ? bonusDx : -bonusDx);
-    trueDy = dy + (dy > 0 ? bonusDy : -bonusDy);
+    trueDx = (trueDx >= 0 ? dx + bonusDx : -1 * (dx + bonusDx));
+    trueDy = (trueDy = 0 ? dy + bonusDy : -1*(dy + bonusDy));
 }
 
 function clearSpeed(){
@@ -384,7 +380,7 @@ easyButton.addEventListener("click", () => {
     lives = 3;
     ballRadius = 10;
     dx = 0.75;
-    dy = -0.75;
+    dy = 0.75;
     brickRowCount = 2;
     brickColumnCount = 7;
     brickWidth = 50;
@@ -398,7 +394,7 @@ mediumButton.addEventListener("click", () => {
     lives = 2;
     ballRadius = 7.5;
     dx = 1.25;
-    dy = -1.25;
+    dy = 1.25;
     brickRowCount = 4;
     brickColumnCount = 9;
     brickWidth = 40;
@@ -410,8 +406,8 @@ mediumButton.addEventListener("click", () => {
 hardButton.addEventListener("click", () => {
     lives = 2;
     ballRadius = 5;
-    dx = 2;
-    dy = -2;
+    dx = 1.5;
+    dy = 1.5;
     brickRowCount = 6;
     brickColumnCount = 12;
     brickWidth = 30;
@@ -421,16 +417,35 @@ hardButton.addEventListener("click", () => {
 })
 
 function startGame(){
+    stopped = true;
     for (let c = 0; c < brickColumnCount; c++) {
         bricks[c] = [];
         for (let r = 0; r < brickRowCount; r++) {
             bricks[c][r] = { x: 0, y: 0, status: 1 };
         }
     }
-    playing = true;
-    draw();
+
+    trueDx = 0;
+    trueDy = 0;
+    clearSpeed();
+    stopped = false;
+    if (!playing) {
+        playing = true;
+        draw();
+    } else {
+        playing = true;
+    }
+    /*
     easyButton.disabled = true;
     mediumButton.disabled = true;
     hardButton.disabled = true;
-    setSpeed();
+    */
+
+    playing = true;
+    stopped = false;
+
+    bricksBroken = 0;
+    score = 0;
+    x = canvas.width / 2;
+    y = canvas.height - ballRadius - paddleHeight;
 }
