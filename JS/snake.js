@@ -1,4 +1,6 @@
-﻿const canvas = document.querySelector("#canvas");
+﻿//todo: if you go a different direction and then back in the opposite direction before the next frame is drawn it goes back on itself and game over
+
+const canvas = document.querySelector("#canvas");
 const ctx = canvas.getContext("2d");
 const easyButton = document.querySelector("#easy");
 const mediumButton = document.querySelector("#medium");
@@ -102,6 +104,8 @@ function placeFood(){
     }
 }
 
+
+//todo: add in check to see if turning in that direction causes you to go into the section behind the head, skip if true
 function changeDirection(e){
     switch(e.code){
         case "ArrowUp":
