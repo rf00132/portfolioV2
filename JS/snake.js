@@ -14,8 +14,6 @@ let snakeX = blockSize * 5;
 let snakeY = blockSize * 5;
 
 let speed = { x: 0, y: 0};
-let nextSpeed = { x: 0, y: 0};
-let lastSpeed = { x: 0, y: 0};
 
 let snake = [];
 
@@ -47,7 +45,6 @@ function startGame(){
 
 function draw(){
     if(gameOver || !playing) return;
-    changedDirection = true;
     // Background of a Game
     ctx.fillStyle = "#9744be";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -73,7 +70,6 @@ function draw(){
 
     ctx.fillStyle = "white";
 
-    speed = nextSpeed;
     snakeX += speed.x * blockSize;
     snakeY += speed.y * blockSize;
 
@@ -109,38 +105,43 @@ function endGame(){
 }
 
 function placeFood(){
-    foodCoords = {
-        x: Math.floor(Math.random() * totalColumns) * blockSize,
-        y: Math.floor(Math.random() * totalRows) * blockSize
+    while(snake.some(part => part[0] === foodCoords.x && part[1] === foodCoords.y)){
+        foodCoords = {
+            x: Math.floor(Math.random() * totalColumns) * blockSize,
+            y: Math.floor(Math.random() * totalRows) * blockSize
+        }
     }
 }
 
 function changeDirection(e){
     if(changedDirection) return;
+
     switch(e.code){
         case "ArrowUp":
-            if(lastSpeed.y === 1) break;
-            nextSpeed.y = -1;
-            nextSpeed.x = 0;
+            if(speed.y === 1) return;
+            speed.y = -1;
+            speed.x = 0;
             break;
         case "ArrowDown":
-            if(lastSpeed.y === -1) break;
-            nextSpeed.y = 1;
-            nextSpeed.x = 0;
+            if(speed.y === -1) return;
+            speed.y = 1;
+            speed.x = 0;
             break;
         case "ArrowLeft":
-            if(lastSpeed.x === 1) break;
-            nextSpeed.y = 0;
-            nextSpeed.x = -1;
+            if(speed.x === 1) return;
+            speed.y = 0;
+            speed.x = -1;
             break;
         case "ArrowRight":
-            if(lastSpeed.x === -1) break;
-            nextSpeed.y = 0;
-            nextSpeed.x = 1;
+            if(speed.x === -1) return;
+            speed.y = 0;
+            speed.x = 1;
             break;
         default:
             break;
     }
+
+    changedDirection = true;
 }
 
 easyButton.addEventListener("click", () => {
