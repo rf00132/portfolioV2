@@ -209,15 +209,12 @@ button {
     right: 0;
 }
 
-
-
-
 .ui-box:hover, #menu-button:hover{
     background-color: var(--tertiary-accent);
     cursor: pointer;
 }
 
-#games-content .content-box{
+.links .content-box{
     padding: 0;
 
     a {
@@ -229,19 +226,19 @@ button {
     }
 }
 
-#games-content .content-box:nth-child(4n-3){
+.links .content-box:nth-child(4n-3){
     p{
         padding-bottom: calc(var(--low-cutout) * 2.5);
     }
 }
 
-#games-content .content-box:nth-child(4n-2){
+.links .content-box:nth-child(4n-2){
     p{
         padding-bottom: calc(var(--low-cutout) * 2.5);
     }
 }
 
-#games-content .content-box:nth-child(4n-1){
+.links .content-box:nth-child(4n-1){
     p{
         padding-left: 0;
         padding-right: calc(var(--low-cutout) * 2);
@@ -249,7 +246,7 @@ button {
     }
 }
 
-#games-content .content-box:nth-child(4n){
+.links .content-box:nth-child(4n){
     p{
         padding-top: calc(var(--low-cutout) * 2.5);
         padding-left: var(--low-cutout);
@@ -284,7 +281,7 @@ button {
     }
 }
 
-#games-content .content-box:hover{
+.links .content-box-link:hover{
     background-color: var(--main-accent);
     cursor: pointer;
 }
