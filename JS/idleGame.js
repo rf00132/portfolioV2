@@ -2,6 +2,9 @@
 //todo: absolute position settings menu is not scrollable, look into reorganising the html and css so it is
 //todo: make cookie pop up and saving cookies for longer optional
 //todo: add in upgrades for brick breaker v
+//todo: reset showing up early for some reason
+//todo: shop ui not resetting on reset?
+//todo: total points goes up with the reset points bonus, actual points does not
 
 const perSecondUpgrade = document.querySelector("#points-per-second");
 const perClickUpgrade = document.querySelector("#points-per-click");
