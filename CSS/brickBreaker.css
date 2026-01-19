@@ -1,8 +1,4 @@
-﻿* {
-    padding: 0;
-    margin: 0;
-}
-canvas {
+﻿canvas {
     background: var(--main-color);
     display: block;
     margin: 16px auto;
@@ -23,6 +19,11 @@ canvas {
     min-width: 150px;
 }
 
+#easy:hover, #medium:hover, #hard:hover {
+    background: var(--tertiary-accent);
+    cursor: pointer;
+}
+
 .buttons{
     display: flex;
     justify-content: center;
@@ -31,4 +32,10 @@ canvas {
 #runButton:hover {
     cursor: pointer;
     background-color: var(--tertiary-accent);
+}
+
+#games-content .content-box{
+    a {
+        padding: 16px;
+    }
 }
