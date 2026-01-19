@@ -1,4 +1,10 @@
-﻿const canvas = document.querySelector("#canvas");
+﻿//todo: add timer for food spawn
+//todo: allow multiple food spawns at once
+//todo: make bad food to shrink snake?
+//todo: remove alert for game over
+//todo: add in win condition snake.length === width x height / blocksize*blocksize
+
+const canvas = document.querySelector("#canvas");
 const ctx = canvas.getContext("2d");
 const easyButton = document.querySelector("#easy");
 const mediumButton = document.querySelector("#medium");
@@ -27,9 +33,7 @@ function startGame(){
     gameOver = false;
     score = 0;
     snake = [];
-    nextSpeed = { x: 0, y: 0};
     speed = { x: 0, y: 0};
-    lastSpeed = { x: 0, y: 0};
     snakeX = blockSize * 5;
     snakeY = blockSize * 5;
     canvas.height = blockSize * totalRows;
