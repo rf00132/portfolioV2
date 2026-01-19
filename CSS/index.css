@@ -223,6 +223,9 @@ button {
     a {
         margin-top: -13px;
         padding-top: 13px;
+        div{
+            padding: 16px;
+        }
     }
 }
 
