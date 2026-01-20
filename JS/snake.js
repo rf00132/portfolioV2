@@ -3,7 +3,6 @@
 //todo: make bad food to shrink snake?
 //todo: remove alert for game over
 //todo: add in win condition snake.length === width x height / blocksize*blocksize
-//todo: implement upgrades from idle game
 
 const canvas = document.querySelector("#canvas");
 const ctx = canvas.getContext("2d");
@@ -51,6 +50,11 @@ function startGame(){
 function draw(){
     if(gameOver || !playing) return;
     // Background of a Game
+    if(snake.length === totalColumns * totalRows) {
+        winGame();
+        gameOver = true;
+        return;
+    }
     ctx.fillStyle = "#9744be";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -180,4 +184,12 @@ function addBonusSpeed(){
 
 function addBonusFood(){
     return unlocks.snakeMoreFood ? 3000 : 0;
+}
+
+function resetFoodTimer(){
+    powerUpTimer = Math.floor(Math.random() * 7000 - addBonusFood()) + 3000;
+}
+
+function winGame(){
+    alert(`You won! Your score was ${score}`);
 }
