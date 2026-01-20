@@ -150,7 +150,7 @@ function changeDirection(e){
 }
 
 easyButton.addEventListener("click", () => {
-    fps = 10;
+    fps = 8 + addBonusSpeed();
     blockSize = 25;
     totalRows = 17;
     totalColumns = 17;
@@ -158,7 +158,7 @@ easyButton.addEventListener("click", () => {
 });
 
 mediumButton.addEventListener("click", () => {
-    fps = 15;
+    fps = 12 + addBonusSpeed();
     blockSize = 25;
     totalRows = 21;
     totalColumns = 21;
@@ -166,9 +166,18 @@ mediumButton.addEventListener("click", () => {
 })
 
 hardButton.addEventListener("click", () => {
-    fps = 20;
+    fps = 16 + addBonusSpeed();
     blockSize = 25;
     totalRows = 25;
     totalColumns = 25;
     startGame();
 })
+
+
+function addBonusSpeed(){
+    return unlocks.snakeMoreSpeed ? 4 : 0;
+}
+
+function addBonusFood(){
+    return unlocks.snakeMoreFood ? 3000 : 0;
+}
