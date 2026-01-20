@@ -27,6 +27,14 @@
     --tile-all-cutout: polygon(0 var(--low-cutout-short),0 var(--high-cutout-short),var(--low-cutout-short) 100%, var(--high-cutout-short) 100%, 100% var(--high-cutout-short), 100% var(--low-cutout-short),var(--high-cutout-short) 0, var(--low-cutout-short) 0);
 }
 
+article{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 48px;
+    text-align: center;
+    max-width: 800px;
+}
 
 body {
     margin: 0;
@@ -49,9 +57,20 @@ main {
     justify-content: center;
 }
 
-h1 {
+h1, h2 {
     text-align: center;
     margin-top: 80px;
+}
+
+.about-me-img{
+    border-radius: 50%;
+    height: 256px;
+    margin: 0 auto;
+}
+
+#main-page-heading{
+    margin-top: 100px;
+    margin-bottom: 40px;
 }
 
 nav {
@@ -299,7 +318,7 @@ button {
 }
 
 @media screen and (min-width: 370px) {
-    h1 {
+    h1, h2 {
         margin-top: 21px;
     }
 
