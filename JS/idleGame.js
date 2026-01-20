@@ -1,7 +1,5 @@
-﻿//todo: rebalance shop upgrade ratio formula
-//todo: absolute position settings menu is not scrollable, look into reorganising the html and css so it is
+﻿//todo: absolute position settings menu is not scrollable, look into reorganising the html and css so it is
 //todo: make cookie pop up and saving cookies for longer optional
-//todo: add in upgrades for brick breaker
 
 const perSecondUpgrade = document.querySelector("#points-per-second");
 const perClickUpgrade = document.querySelector("#points-per-click");
@@ -35,6 +33,13 @@ let shopCosts = {
     pointsMovement: 30,
     pointsButtonClick: 40
 };
+
+let unlocks = {
+    bbMorePowerups: false,
+    bbMoreLives: false,
+    snakeMoreFood: false,
+    snakeMoreLives: false
+}
 
 let gamesPage = false;
 
@@ -91,6 +96,16 @@ function gameOnLoad(){
         pointsDisplay = document.querySelectorAll(".points-display");
         pointsPerSecondDisplay = document.querySelector("#pointsPerSecond");
         pointsPerClickDisplay = document.querySelector("#pointsPerClick");
+
+        try{
+            const savedUnlocks = getUnlocks();
+            if(savedUnlocks !== null){
+                unlocks = savedUnlocks;
+            }
+        } catch (error) {
+            console.error("Error loading unlocks:", error);
+        }
+
         try {
             const savedTotalPoints = parseInt(getTotalPoints());
             if (savedTotalPoints !== null && savedTotalPoints > 0) {
@@ -356,6 +371,14 @@ function getResetPoints(){
     return getCookie("resetPoints");
 }
 
+function setUnlocks(){
+    setCookie("unlocks", JSON.stringify(unlocks));
+}
+
+function getUnlocks(){
+    return JSON.parse(getCookie("unlocks"));
+}
+
 function incrementPointsMultiplier(amount = 0.1){
     pointsMultiplier +=  amount;
     savePointsMultiplier();
@@ -453,11 +476,6 @@ function displayStore(){
     }
 }
 
-const unlocks = {
-    games: "false",
-    rhythm: "false"
-};
-
 function onButtonClick(){
     addPoints(pointsPerButtonClick * pointsMultiplier);
 }
@@ -530,11 +548,42 @@ function unlockGames(){
     updateCost(document.querySelector("#games-page-unlock"), "Sold Out");
 }
 
+function unlockBbMoreLives(){
+    unlocks.bbMoreLives = true;
+    document.querySelector("#bb-more-lives").disabled = true;
+    document.querySelector("#bb-more-lives").style.display = "none";
+    updateCost(document.querySelector("#bb-more-lives"), "Sold Out");
+    setUnlocks();
+}
+
+function unlockBbMorePowerups(){
+    unlocks.bbMorePowerups = true;
+    document.querySelector("#bb-faster-powerups").disabled = true;
+    document.querySelector("#bb-faster-powerups").style.display = "none";
+    updateCost(document.querySelector("#bb-faster-powerups"), "Sold Out");
+    setUnlocks();
+}
+
+function unlockSnakeMoreFood(){
+    unlocks.snakeMoreFood = true;
+    document.querySelector("#snake-faster-food").disabled = true;
+    document.querySelector("#snake-faster-food").style.display = "none";
+    updateCost(document.querySelector("#snake-faster-food"), "Sold Out");
+    setUnlocks();
+}
+
+function unlockSnakeMoreLives(){
+    unlocks.snakeMoreLives = true;
+    document.querySelector("#snake-more-lives").disabled = true;
+    document.querySelector("#snake-more-lives").style.display = "none";
+    updateCost(document.querySelector("#snake-more-lives"), "Sold Out");
+    setUnlocks();
+}
+
 function updateCost(element, cost){
     element.querySelector(".cost").innerHTML = formatNumber(cost);
     setShopCosts();
 }
-
 
 function updateAmount(element, amount){
     element.querySelector(".upgrade-amount").innerHTML =  formatNumber(amount);
@@ -559,6 +608,10 @@ movementUpgrade.addEventListener("click", upgradePointsMovement);
 perButtonClick.addEventListener("click", upgradePointsButtonClick);
 //gamesUnlock.addEventListener("click", unlockGames);
 reset.addEventListener("click", startReset);
+document.querySelector("#bb-more-lives").addEventListener("click", unlockBbMoreLives);
+document.querySelector("#bb-faster-powerups").addEventListener("click", unlockBbMorePowerups);
+document.querySelector("#snake-faster-food").addEventListener("click", unlockSnakeMoreFood);
+document.querySelector("#snake-more-lives").addEventListener("click", unlockSnakeMoreLives);
 
 
 function setUpShop(){
@@ -568,6 +621,30 @@ function setUpShop(){
     updateMovementShopItem();
     updateScrollShopItem();
     updateMultiplierShopItem();
+
+    if(unlocks.bbMoreLives){
+        document.querySelector("#bb-more-lives").disabled = true;
+        document.querySelector("#bb-more-lives").style.display = "none";
+        updateCost(document.querySelector("#bb-more-lives"), "Sold Out");
+    }
+
+    if(unlocks.bbMorePowerups){
+        document.querySelector("#bb-faster-powerups").disabled = true;
+        document.querySelector("#bb-faster-powerups").style.display = "none";
+        updateCost(document.querySelector("#bb-faster-powerups"), "Sold Out");
+    }
+
+    if(unlocks.snakeMoreFood){
+        document.querySelector("#snake-faster-food").disabled = true;
+        document.querySelector("#snake-faster-food").style.display = "none";
+        updateCost(document.querySelector("#snake-faster-food"), "Sold Out");
+    }
+
+    if(unlocks.snakeMoreLives){
+        document.querySelector("#snake-more-lives").disabled = true;
+        document.querySelector("#snake-more-lives").style.display = "none";
+        updateCost(document.querySelector("#snake-more-lives"), "Sold Out");
+    }
 }
 
 function updatePerSecondShopItem(){
@@ -605,10 +682,6 @@ function updateMultiplierShopItem(){
     updateAmount(multiplierUpgrade, pointsMultiplier * upgradeRatio > 0.1 ? pointsMultiplier * upgradeRatio : 0.1);
     updateCurrentAmount(multiplierUpgrade, pointsMultiplier);
 }
-
-
-
-//todo: revamp save cookie to single cookie
 
 function formatNumber(num) {
     let formattedNum;

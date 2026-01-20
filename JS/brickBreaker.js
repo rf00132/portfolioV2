@@ -20,8 +20,8 @@ let dy = 2;
 let bonusDx = 0;
 let bonusDy = 0;
 
-let trueDx = 0;
-let trueDy = -1;
+let trueDx = -1;
+let trueDy = 0;
 
 const colours = ["#d6b4e7", "#f59191", "#f0776c", "#eb4d4b", "#9954bb", "#727cf5", "#515365", "#4ecdc4", "#556270", "#ff6b6b"];
 let ballColour = "#d6b4e7";
@@ -248,12 +248,10 @@ function drawPowerup(){
     }
 
     if(!canvas.powerup.active && lastFrameTime + powerUpTimer < Date.now()){
-        console.log("resetting powerup");
         lastFrameTime = Date.now();
         resetPowerUpTimer();
         resetPowerup = true;
         powerUpType = Math.floor(Math.random() * 4);
-        console.log(powerUpType);
     }
 
     if (!canvas.powerup.active) return;
@@ -287,7 +285,6 @@ function drawPowerup(){
 
         switch (powerUpType) {
             case 0:
-                console.log("moreScore!");
                 score += 10;
                 if(bonusPaddleWidth !== 0){
                     bonusPaddleWidth = 0;
@@ -298,7 +295,6 @@ function drawPowerup(){
                 }
                 break;
             case 1:
-                console.log("moreLives!");
                 lives++;
                 if(bonusPaddleWidth !== 0){
                     bonusPaddleWidth = 0;
@@ -309,7 +305,6 @@ function drawPowerup(){
                 }
                 break;
             case 2:
-                console.log("moreWidth!");
                 bonusPaddleWidth = 10;
                 changePaddleWidth()
                 if(bonusDx !== 0 || bonusDy !== 0){
@@ -317,7 +312,6 @@ function drawPowerup(){
                 }
                 break;
             case 3:
-                console.log("moreSpeed!");
                 bonusDx = 0.5;
                 bonusDy = 0.5;
 
@@ -336,7 +330,7 @@ function drawPowerup(){
 }
 
 function resetPowerUpTimer(){
-    powerUpTimer = Math.floor(Math.random() * 7000) + 3000;
+    powerUpTimer = Math.floor(Math.random() * 7000 - addBonusPowerups()) + 3000;
 }
 
 function setSpeed(){
@@ -375,7 +369,7 @@ document.addEventListener("keyup", keyUpHandler);
 document.addEventListener("mousemove", mouseMoveHandler);
 
 easyButton.addEventListener("click", () => {
-    lives = 3;
+    lives = 3 + addBonusLives();
     ballRadius = 10;
     dx = 0.75;
     dy = 0.75;
@@ -389,7 +383,7 @@ easyButton.addEventListener("click", () => {
 
 
 mediumButton.addEventListener("click", () => {
-    lives = 2;
+    lives = 3 + addBonusLives();
     ballRadius = 7.5;
     dx = 1.25;
     dy = 1.25;
@@ -402,7 +396,7 @@ mediumButton.addEventListener("click", () => {
 })
 
 hardButton.addEventListener("click", () => {
-    lives = 2;
+    lives = 3 + addBonusLives();
     ballRadius = 5;
     dx = 1.5;
     dy = 1.5;
@@ -424,7 +418,7 @@ function startGame(){
     }
 
     trueDx = 0;
-    trueDy = 0;
+    trueDy = -1;
     clearSpeed();
     stopped = false;
     if (!playing) {
@@ -446,4 +440,12 @@ function startGame(){
     score = 0;
     x = canvas.width / 2;
     y = canvas.height - ballRadius - paddleHeight;
+}
+
+function addBonusLives(){
+    return unlocks.bbMoreLives ? 2: 0;
+}
+
+function addBonusPowerups() {
+    return unlocks.bbMorePowerups ? 3000 : 0;
 }

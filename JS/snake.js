@@ -3,6 +3,7 @@
 //todo: make bad food to shrink snake?
 //todo: remove alert for game over
 //todo: add in win condition snake.length === width x height / blocksize*blocksize
+//todo: implement upgrades from idle game
 
 const canvas = document.querySelector("#canvas");
 const ctx = canvas.getContext("2d");
