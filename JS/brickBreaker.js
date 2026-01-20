@@ -1,6 +1,4 @@
-﻿//todo: find glitch with speed reset on power up collection causing ball to change direction
-
-const canvas = document.querySelector("#canvas");
+﻿const canvas = document.querySelector("#canvas");
 const ctx = canvas.getContext("2d");
 const easyButton = document.querySelector("#easy");
 const mediumButton = document.querySelector("#medium");
@@ -23,7 +21,7 @@ let bonusDx = 0;
 let bonusDy = 0;
 
 let trueDx = 0;
-let trueDy = 0;
+let trueDy = -1;
 
 const colours = ["#d6b4e7", "#f59191", "#f0776c", "#eb4d4b", "#9954bb", "#727cf5", "#515365", "#4ecdc4", "#556270", "#ff6b6b"];
 let ballColour = "#d6b4e7";
@@ -343,7 +341,7 @@ function resetPowerUpTimer(){
 
 function setSpeed(){
     trueDx = (trueDx >= 0 ? dx + bonusDx : -1 * (dx + bonusDx));
-    trueDy = (trueDy = 0 ? dy + bonusDy : -1*(dy + bonusDy));
+    trueDy = (trueDy >= 0 ? dy + bonusDy : -1*(dy + bonusDy));
 }
 
 function clearSpeed(){
