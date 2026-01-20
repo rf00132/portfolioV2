@@ -1,6 +1,7 @@
 ﻿//todo: absolute position settings menu is not scrollable, look into reorganising the html and css so it is
 //todo: make cookie pop up and saving cookies for longer optional
 
+
 const perSecondUpgrade = document.querySelector("#points-per-second");
 const perClickUpgrade = document.querySelector("#points-per-click");
 const multiplierUpgrade = document.querySelector("#points-multiplier");
