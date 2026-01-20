@@ -1,8 +1,6 @@
 ﻿//todo: add timer for food spawn
 //todo: allow multiple food spawns at once
-//todo: make bad food to shrink snake?
-//todo: remove alert for game over
-//todo: add in win condition snake.length === width x height / blocksize*blocksize
+//todo: make bad food to shrink snake
 
 const canvas = document.querySelector("#canvas");
 const ctx = canvas.getContext("2d");
@@ -29,6 +27,8 @@ let gameOver = false;
 let changedDirection = false;
 let playing = false;
 
+const scoreColour = "#d6b4e7";
+
 function startGame(){
     gameOver = false;
     score = 0;
@@ -51,7 +51,7 @@ function draw(){
     if(gameOver || !playing) return;
     // Background of a Game
     if(snake.length === totalColumns * totalRows) {
-        winGame();
+        drawWinScreen();
         gameOver = true;
         return;
     }
@@ -99,8 +99,12 @@ function draw(){
             endGame();
         }
     }
-
+    if(gameOver) {
+        drawGameOver();
+        return;
+    }
     changedDirection = false;
+
     setTimeout( () =>
     {
         requestAnimationFrame(draw);
@@ -110,7 +114,6 @@ function draw(){
 function endGame(){
     gameOver = true;
     playing = false;
-    alert("Game Over");
 }
 
 function placeFood(){
@@ -190,6 +193,22 @@ function resetFoodTimer(){
     powerUpTimer = Math.floor(Math.random() * 7000 - addBonusFood()) + 3000;
 }
 
-function winGame(){
-    alert(`You won! Your score was ${score}`);
+function drawGameOver() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    playing = false;
+    ctx.font = "32px Arial";
+    ctx.fillStyle = scoreColour;
+    ctx.fillText(`Game Over!`, 125, 120);
+
+    ctx.fillText(`Score: ${score}`, 150, 200);
+    console.log("game over");
+}
+
+function drawWinScreen() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    playing = false;
+    ctx.font = "32px Arial";
+    ctx.fillStyle = scoreColour;
+    ctx.fillText(`You Win!`, 145, 120);
+    ctx.fillText(`Score: ${score}`, 140, 200);
 }
