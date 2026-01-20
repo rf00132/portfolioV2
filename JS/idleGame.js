@@ -1,10 +1,7 @@
 ﻿//todo: rebalance shop upgrade ratio formula
 //todo: absolute position settings menu is not scrollable, look into reorganising the html and css so it is
 //todo: make cookie pop up and saving cookies for longer optional
-//todo: add in upgrades for brick breaker v
-//todo: reset showing up early for some reason
-//todo: shop ui not resetting on reset?
-//todo: total points goes up with the reset points bonus, actual points does not
+//todo: add in upgrades for brick breaker
 
 const perSecondUpgrade = document.querySelector("#points-per-second");
 const perClickUpgrade = document.querySelector("#points-per-click");
@@ -223,7 +220,7 @@ function gameOnLoad(){
 
 function startReset(){
     if(totalPointsGained < 1000000) return;
-    resetPoints += (totalPointsGained/100000).toFixed();
+    resetPoints += (totalPointsGained/1000000).toFixed();
 
     clearInterval(idleInterval);
     clearInterval(scrollInterval);
@@ -252,12 +249,12 @@ function startReset(){
     points = 0;
     savePoints();
     UpdateDisplay()
-    setShopCosts();
     idleInterval = setInterval(addIdlePoints, 1000);
     scrollInterval = setInterval(addScrollPoints, 1000);
     movementInterval = setInterval(addMovementPoints, 100);
     reset.style = "display: none;";
-
+    setShopCosts();
+    setUpShop();
     setResetPoints();
     resetting = true;
 }
@@ -369,11 +366,11 @@ function incrementPointsMultiplier(amount = 0.1){
 function addPoints(amount) {
     try {
         let amountToAdd = amount;
-        points +=  amountToAdd;
         if(amountToAdd > 0) {
             amountToAdd *= (resetPoints > 0 ? 1 + (resetPoints - resetPoints/2 + resetPoints/3 - resetPoints/4) : 1);
             totalPointsGained += amountToAdd;
         }
+        points +=  amountToAdd;
         points = roundToDecimalPlaces(points);
         UpdateDisplay();
         if(amount !== 0) savePoints();
@@ -551,7 +548,7 @@ function roundToDecimalPlaces(numToRound, decimalPlaces = 1){
 }
 
 function reduceAmountForDisplay(amountToReduce, reduction){
-    return roundToDecimalPlaces(amountToReduce, -1 * reduction).toFixed()/Math.pow(10, reduction)
+    return (roundToDecimalPlaces(amountToReduce, -1 * reduction)/Math.pow(10, reduction)).toFixed()
 }
 
 perSecondUpgrade.addEventListener("click", upgradePointsPerSecond);
