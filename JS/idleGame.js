@@ -31,14 +31,18 @@ let shopCosts = {
     pointsMultiplier: 100,
     pointsScroll: 50,
     pointsMovement: 30,
-    pointsButtonClick: 40
+    pointsButtonClick: 40,
+    bbMoreLives: 400,
+    bbMorePowerups: 400,
+    snakeMoreFood: 400,
+    snakeMoreSpeed: 400
 };
 
 let unlocks = {
     bbMorePowerups: false,
     bbMoreLives: false,
     snakeMoreFood: false,
-    snakeMoreLives: false
+    snakeMoreSpeed: false
 }
 
 let gamesPage = false;
@@ -253,12 +257,16 @@ function startReset(){
     pointMove = 0;
     setPointsMovement();
     shopCosts = {
-        pointsPerSecond: 40,
+        pointsPerSecond: 20,
         pointsPerClick: 10,
-        pointsMultiplier: 40,
-        pointsScroll: 40,
-        pointsMovement: 40,
-        pointsButtonClick: 40
+        pointsMultiplier: 100,
+        pointsScroll: 50,
+        pointsMovement: 30,
+        pointsButtonClick: 40,
+        bbMoreLives: 400,
+        bbMorePowerups: 400,
+        snakeMoreFood: 400,
+        snakeMoreSpeed: 400
     };
     totalPointsGained = 0;
     points = 0;
@@ -268,9 +276,18 @@ function startReset(){
     scrollInterval = setInterval(addScrollPoints, 1000);
     movementInterval = setInterval(addMovementPoints, 100);
     reset.style = "display: none;";
+    unlocks = {
+        bbMorePowerups: false,
+        bbMoreLives: false,
+        snakeMoreFood: false,
+        snakeMoreSpeed: false
+    }
+    setUnlocks();
     setShopCosts();
     setUpShop();
     setResetPoints();
+
+
     resetting = true;
 }
 
@@ -549,6 +566,10 @@ function unlockGames(){
 }
 
 function unlockBbMoreLives(){
+    const cost = shopCosts.bbMoreLives;
+    if(points < cost) return;
+    console.log(cost);
+    addPoints(-1 * cost);
     unlocks.bbMoreLives = true;
     document.querySelector("#bb-more-lives").disabled = true;
     document.querySelector("#bb-more-lives").style.display = "none";
@@ -557,6 +578,10 @@ function unlockBbMoreLives(){
 }
 
 function unlockBbMorePowerups(){
+    const cost = shopCosts.bbMorePowerups;
+    if(points < cost) return;
+    console.log(cost);
+    addPoints(-1 * cost);
     unlocks.bbMorePowerups = true;
     document.querySelector("#bb-faster-powerups").disabled = true;
     document.querySelector("#bb-faster-powerups").style.display = "none";
@@ -565,6 +590,10 @@ function unlockBbMorePowerups(){
 }
 
 function unlockSnakeMoreFood(){
+    const cost = shopCosts.snakeMoreFood;
+    if(points < cost) return;
+    console.log(cost);
+    addPoints(-1 * cost);
     unlocks.snakeMoreFood = true;
     document.querySelector("#snake-faster-food").disabled = true;
     document.querySelector("#snake-faster-food").style.display = "none";
@@ -572,11 +601,15 @@ function unlockSnakeMoreFood(){
     setUnlocks();
 }
 
-function unlockSnakeMoreLives(){
-    unlocks.snakeMoreLives = true;
-    document.querySelector("#snake-more-lives").disabled = true;
-    document.querySelector("#snake-more-lives").style.display = "none";
-    updateCost(document.querySelector("#snake-more-lives"), "Sold Out");
+function unlockSnakeMoreSpeed(){
+    const cost = shopCosts.snakeMoreSpeed;
+    if(points < cost) return;
+    console.log(cost);
+    addPoints(-1 * cost);
+    unlocks.snakeMoreSpeed = true;
+    document.querySelector("#snake-more-speed").disabled = true;
+    document.querySelector("#snake-more-speed").style.display = "none";
+    updateCost(document.querySelector("#snake-more-speed"), "Sold Out");
     setUnlocks();
 }
 
@@ -611,7 +644,7 @@ reset.addEventListener("click", startReset);
 document.querySelector("#bb-more-lives").addEventListener("click", unlockBbMoreLives);
 document.querySelector("#bb-faster-powerups").addEventListener("click", unlockBbMorePowerups);
 document.querySelector("#snake-faster-food").addEventListener("click", unlockSnakeMoreFood);
-document.querySelector("#snake-more-lives").addEventListener("click", unlockSnakeMoreLives);
+document.querySelector("#snake-more-speed").addEventListener("click", unlockSnakeMoreSpeed);
 
 
 function setUpShop(){
@@ -626,24 +659,40 @@ function setUpShop(){
         document.querySelector("#bb-more-lives").disabled = true;
         document.querySelector("#bb-more-lives").style.display = "none";
         updateCost(document.querySelector("#bb-more-lives"), "Sold Out");
+    } else{
+        document.querySelector("#bb-more-lives").disabled = false;
+        document.querySelector("#bb-more-lives").style.display = "block";
+        updateCost(document.querySelector("#bb-more-lives"), shopCosts.bbMoreLives);
     }
 
     if(unlocks.bbMorePowerups){
         document.querySelector("#bb-faster-powerups").disabled = true;
         document.querySelector("#bb-faster-powerups").style.display = "none";
         updateCost(document.querySelector("#bb-faster-powerups"), "Sold Out");
+    } else{
+        document.querySelector("#bb-faster-powerups").disabled = false;
+        document.querySelector("#bb-faster-powerups").style.display = "block";
+        updateCost(document.querySelector("#bb-faster-powerups"), shopCosts.bbMorePowerups);
     }
 
     if(unlocks.snakeMoreFood){
         document.querySelector("#snake-faster-food").disabled = true;
         document.querySelector("#snake-faster-food").style.display = "none";
         updateCost(document.querySelector("#snake-faster-food"), "Sold Out");
+    } else {
+        document.querySelector("#snake-faster-food").disabled = false;
+        document.querySelector("#snake-faster-food").style.display = "block";
+        updateCost(document.querySelector("#snake-faster-food"), shopCosts.snakeMoreFood);
     }
 
-    if(unlocks.snakeMoreLives){
-        document.querySelector("#snake-more-lives").disabled = true;
-        document.querySelector("#snake-more-lives").style.display = "none";
-        updateCost(document.querySelector("#snake-more-lives"), "Sold Out");
+    if(unlocks.snakeMoreSpeed){
+        document.querySelector("#snake-more-speed").disabled = true;
+        document.querySelector("#snake-more-speed").style.display = "none";
+        updateCost(document.querySelector("#snake-more-speed"), "Sold Out");
+    } else {
+        document.querySelector("#snake-more-speed").disabled = false;
+        document.querySelector("#snake-more-speed").style.display = "block";
+        updateCost(document.querySelector("#snake-more-speed"), shopCosts.snakeMoreSpeed);
     }
 }
 
