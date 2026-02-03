@@ -48,7 +48,6 @@ function startGame(){
     document.addEventListener("keydown", changeDirection);
     if(!playing) {
         playing = true;
-        console.log("starting game");
         draw();
     }
 }
@@ -223,27 +222,27 @@ function addBonusFood(){
 }
 
 function resetFoodTimer(){
-    console.log("resetting food timer: " + foodTimer);
     lastFrameTime = Date.now();
     foodTimer = Math.floor(Math.random() * 4000 - addBonusFood() ) + 500 ;
 }
 
-function drawGameOver() {
+function drawEndScreen(text) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     playing = false;
     ctx.font = "32px Arial";
     ctx.fillStyle = scoreColour;
-    ctx.fillText(`Game Over!`, 125, 120);
+    ctx.textAlign = "center";
 
-    ctx.fillText(`Score: ${score}`, 150, 200);
-    console.log("game over");
+    const xPos = canvas.width / 2;
+    const yPos = canvas.height / 2;
+    ctx.fillText(text, xPos, yPos - 40);
+    ctx.fillText(`Score: ${score}`, xPos, yPos + 40);
 }
 
 function drawWinScreen() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    playing = false;
-    ctx.font = "32px Arial";
-    ctx.fillStyle = scoreColour;
-    ctx.fillText(`You Win!`, 145, 120);
-    ctx.fillText(`Score: ${score}`, 140, 200);
+    drawEndScreen("You Win!");
+}
+
+function drawGameOver() {
+    drawEndScreen("Game Over!");
 }

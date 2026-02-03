@@ -198,22 +198,24 @@ function drawLives(){
 }
 
 function drawGameOver() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    playing = false;
-    ctx.font = "32px Arial";
-    ctx.fillStyle = scoreColour;
-    ctx.fillText(`Game Over!`, 155, 120);
-
-    ctx.fillText(`Score: ${score}`, 175, 200);
+    drawEndScreen(`Game Over`);
 }
 
 function drawWinScreen() {
+    drawEndScreen(`You Win!`);
+}
+
+function drawEndScreen(text){
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     playing = false;
     ctx.font = "32px Arial";
     ctx.fillStyle = scoreColour;
-    ctx.fillText(`You Win!`, 170, 120);
-    ctx.fillText(`Score: ${score}`, 165, 200);
+    ctx.textAlign = "center";
+
+    const xPos = canvas.width / 2;
+    const yPos = canvas.height / 2;
+    ctx.fillText(text, xPos, yPos - 40);
+    ctx.fillText(`Score: ${score}`, xPos, yPos + 40);
 }
 
 function drawPowerup(){
