@@ -21,16 +21,20 @@ let speed = { x: 0, y: 0};
 
 let snake = [];
 
-let foodCoords = { x: 0, y: 0 };
+let foodCoords = [];
+let foodTimer = 0;
+let lastFrameTime = Date.now();
 
 let gameOver = false;
 let changedDirection = false;
 let playing = false;
+let playerMoved = false;
 
 const scoreColour = "#d6b4e7";
 
 function startGame(){
     gameOver = false;
+    playerMoved = false;
     score = 0;
     snake = [];
     speed = { x: 0, y: 0};
@@ -38,7 +42,9 @@ function startGame(){
     snakeY = blockSize * 5;
     canvas.height = blockSize * totalRows;
     canvas.width = blockSize * totalColumns;
+    foodCoords = [];
     placeFood();
+    resetFoodTimer();
     document.addEventListener("keydown", changeDirection);
     if(!playing) {
         playing = true;
@@ -58,19 +64,26 @@ function draw(){
     ctx.fillStyle = "#9744be";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Set food color and position
-    ctx.fillStyle = "yellow";
-    ctx.fillRect(foodCoords.x, foodCoords.y, blockSize, blockSize);
+    drawFood();
+    checkForNewFood();
+    drawSnake();
+    handleGameOver();
 
-    if (snakeX === foodCoords.x && snakeY === foodCoords.y) {
-        snake.push([foodCoords.x, foodCoords.y]);
-        score++;
-        placeFood();
+    if(gameOver) {
+        drawGameOver();
+        return;
     }
 
-    // body of snake will grow
+    changedDirection = false;
+
+    setTimeout( () =>
+    {
+        requestAnimationFrame(draw);
+    }, 1000/fps)
+}
+
+function drawSnake(){
     for (let i = snake.length - 1; i > 0; i--) {
-        // it will store previous part of snake to the current part
         snake[i] = snake[i - 1];
     }
     if (snake.length) {
@@ -86,29 +99,29 @@ function draw(){
     for (let i = 0; i < snake.length; i++) {
         ctx.fillRect(snake[i][0], snake[i][1], blockSize, blockSize);
     }
+}
 
-    if (snakeX < 0
-        || snakeX >= totalColumns * blockSize
-        || snakeY < 0
-        || snakeY >= totalRows * blockSize) {
-        endGame();
-    }
+function drawFood(){
+    ctx.fillStyle = "yellow";
+    foodCoords.forEach(food => {
+        ctx.fillRect(food.x, food.y, blockSize, blockSize);
+        checkFoodEaten(food);
+    });
+}
 
-    for (let i = 0; i < snake.length; i++) {
-        if (snakeX === snake[i][0] && snakeY === snake[i][1]) {
-            endGame();
-        }
+function checkFoodEaten(food){
+    if (snakeX === food.x && snakeY === food.y) {
+        snake.push([food.x, food.y]);
+        score++;
+        foodCoords = foodCoords.filter(item => item !== food);
     }
-    if(gameOver) {
-        drawGameOver();
-        return;
-    }
-    changedDirection = false;
+}
 
-    setTimeout( () =>
-    {
-        requestAnimationFrame(draw);
-    }, 1000/fps)
+function checkForNewFood(){
+    if(!playerMoved){ lastFrameTime = Date.now(); return;}
+    if(lastFrameTime + foodTimer >= Date.now() && foodCoords.length !== 0) return;
+    placeFood();
+    resetFoodTimer()
 }
 
 function endGame(){
@@ -117,16 +130,21 @@ function endGame(){
 }
 
 function placeFood(){
-    while(snake.some(part => part[0] === foodCoords.x && part[1] === foodCoords.y)){
-        foodCoords = {
-            x: Math.floor(Math.random() * totalColumns) * blockSize,
-            y: Math.floor(Math.random() * totalRows) * blockSize
-        }
+    const newFood = {
+        x: Math.floor(Math.random() * totalColumns) * blockSize,
+        y: Math.floor(Math.random() * totalRows) * blockSize
     }
+
+    while(snake.some(part => part[0] === foodCoords.x && part[1] === foodCoords.y)) {
+        newFood.x =  Math.floor(Math.random() * totalColumns) * blockSize;
+        newFood.y = Math.floor(Math.random() * totalRows) * blockSize;
+    }
+    foodCoords.push(newFood);
 }
 
 function changeDirection(e){
     if(changedDirection) return;
+    if(!playerMoved) playerMoved = true;
 
     switch(e.code){
         case "ArrowUp":
@@ -154,6 +172,21 @@ function changeDirection(e){
     }
 
     changedDirection = true;
+}
+
+function handleGameOver(){
+    if (snakeX < 0
+        || snakeX >= totalColumns * blockSize
+        || snakeY < 0
+        || snakeY >= totalRows * blockSize) {
+        endGame();
+    }
+
+    for (let i = 0; i < snake.length; i++) {
+        if (snakeX === snake[i][0] && snakeY === snake[i][1]) {
+            endGame();
+        }
+    }
 }
 
 easyButton.addEventListener("click", () => {
@@ -186,11 +219,13 @@ function addBonusSpeed(){
 }
 
 function addBonusFood(){
-    return unlocks.snakeMoreFood ? 3000 : 0;
+    return unlocks.snakeMoreFood ? 2000 : 0;
 }
 
 function resetFoodTimer(){
-    powerUpTimer = Math.floor(Math.random() * 7000 - addBonusFood()) + 3000;
+    console.log("resetting food timer: " + foodTimer);
+    lastFrameTime = Date.now();
+    foodTimer = Math.floor(Math.random() * 4000 - addBonusFood() ) + 500 ;
 }
 
 function drawGameOver() {
