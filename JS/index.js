@@ -3,7 +3,7 @@
 
 injectHTML("./htmlmodules/nav.html",
     document.querySelector("nav")
-);
+).then(() => console.log("Nav Loaded"));
 
 
 let loaded = false;
@@ -30,19 +30,13 @@ function toggleMenu() {
 
 function onLoad(){
     if(loaded) return;
-    const resp = injectHTML("./htmlmodules/game.html",
+    injectHTML("./htmlmodules/game.html",
         document.querySelector("nav")
     ).then(() =>
         injectHTML("./htmlmodules/head.html",
             document.querySelector("head")
         )
     )
-    /*
-    .then(() =>
-    injectHTML("./htmlmodules/footer.html",
-        document.querySelector("footer")
-    )
-    )*/
     .then(() => {
         menuButton = document.querySelector('#menu-button');
         navBar = document.querySelector('.nav-bar');

@@ -558,14 +558,6 @@ function upgradePointsButtonClick(){
     updateButtonClickItem();
 }
 
-function unlockGames(){
-    unlocks.games = true;
-    gamesPage = true;
-    document.querySelector("#games-page-unlock").disabled = true;
-    document.querySelector("#games-page-unlock").style.display = "none";
-    updateCost(document.querySelector("#games-page-unlock"), "Sold Out");
-}
-
 function unlockBbMoreLives(){
     const cost = shopCosts.bbMoreLives;
     if(points < cost) return;
