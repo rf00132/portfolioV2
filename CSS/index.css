@@ -25,6 +25,13 @@
     --tile-top-left-cutout: polygon(0 var(--low-cutout-short), 0 100%,var(--high-cutout-short) 100%, 100% var(--high-cutout-short), 100% 0, var(--low-cutout-short) 0);
 
     --tile-all-cutout: polygon(0 var(--low-cutout-short),0 var(--high-cutout-short),var(--low-cutout-short) 100%, var(--high-cutout-short) 100%, 100% var(--high-cutout-short), 100% var(--low-cutout-short),var(--high-cutout-short) 0, var(--low-cutout-short) 0);
+
+    color-scheme: light;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
 }
 
 article{
@@ -59,7 +66,14 @@ main {
 
 h1, h2 {
     text-align: center;
+}
+
+h1 {
     margin-top: 80px;
+}
+
+h2 {
+    margin-top: 40px;
 }
 
 .about-me-img{
@@ -319,7 +333,7 @@ button {
     }
 }
 
-@media screen and (min-width: 370px) {
+@media screen and (min-width: 450px) {
     h1, h2 {
         margin-top: 21px;
     }
