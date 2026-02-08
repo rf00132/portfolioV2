@@ -1,11 +1,4 @@
 ﻿:root {
-    --main-color: #9744be;
-    --secondary-color: #c18eda;
-    --main-accent: #793698;
-    --secondary-accent: #d6b4e7;
-    --tertiary-accent: #ac68cc;
-    --text-color-dark: var(--main-accent);
-    --text-color-light: var(--secondary-accent);
     --box-padding: 16px;
     --font: 'Orbitron';
 
@@ -441,11 +434,11 @@ button {
         /* Dark theme tokens: tweak these to taste */
         --main-color: #2a1035;
         --secondary-color: #1b1024;
-        --main-accent: #d6b4e7;
-        --secondary-accent: #ac68cc;
-        --tertiary-accent: #c18eda;
+        --main-accent: #793698;
+        --secondary-accent: #d6b4e7;
+        --tertiary-accent: #480667;
         --text-color-dark: var(--secondary-accent);
-        --text-color-light: var(--main-accent);
+        --text-color-light: var(--secondary-accent);
     }
     html, body {
         background: var(--secondary-color) !important;
@@ -467,11 +460,11 @@ button {
 :root[data-theme="dark"] {
     --main-color: #2a1035;
     --secondary-color: #1b1024;
-    --main-accent: #d6b4e7;
-    --secondary-accent: #ac68cc;
-    --tertiary-accent: #c18eda;
+    --main-accent: #793698;
+    --secondary-accent: #d6b4e7;
+    --tertiary-accent: #480667;
     --text-color-dark: var(--secondary-accent);
-    --text-color-light: var(--main-accent);
+    --text-color-light: var(--secondary-accent);
 }
 
 html, body { forced-color-adjust: none; }
