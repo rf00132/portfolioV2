@@ -5,14 +5,14 @@
     padding: 16px 24px 16px 8px;
     p {
         margin: 0;
-        text-align: right;
+        width: 100%;
+        text-align: center;
     }
 }
 
 #game-button:hover {
     background-color: var(--tertiary-accent);
     cursor: pointer;
-
 }
 
 #game-button:hover .menu-text{
@@ -106,7 +106,7 @@ todo: add in points effect on points display?
     }
 }
 
-@media screen and (min-width: 800px) {
+@media screen and (min-width: 1000px) {
     #game-button {
         display: none;
     }

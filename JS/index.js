@@ -23,7 +23,7 @@ function toggleMenu() {
         menuOpen = false;
     } else {
         menuButton.innerText = "Close";
-        navBar.setAttribute('style', 'right: 0 !important');
+        navBar.setAttribute('style', 'display: flex;');
         menuOpen = true;
     }
 }
@@ -53,7 +53,7 @@ window.onresize = removeMenuStyle;
 
 
 function removeMenuStyle(){
-    if(window.innerWidth < 800) return;
+    if(window.innerWidth < 1000) return;
     navBar.style = "";
     menuOpen = false;
     menuButton.innerText = "Menu";

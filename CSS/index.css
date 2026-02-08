@@ -75,7 +75,7 @@ h1, h2 {
 
 nav {
     z-index: 100;
-    width: 100%
+    width: 100vw
 }
 
 a {
@@ -95,11 +95,10 @@ button {
     width: 140px;
     height: calc(100% - 64px);
     top: 0;
-    right: -240px;
+    right: 0;
     z-index: 105;
     padding: 64px 0 0 0;
-
-    display: flex;
+    display: none;
     justify-content: flex-start;
     flex-direction: column;
     align-content: flex-start;
@@ -220,12 +219,15 @@ button {
     padding: var(--box-padding);
     border: solid 3px var(--secondary-accent);
     border-radius: 2px;
-    width: 50px;
+    width: 90px;
     z-index: 115;
+
+
 }
 
 #menu-button{
     right: 0;
+    text-align: center;
 }
 
 .ui-box:hover, #menu-button:hover{
@@ -325,14 +327,14 @@ button {
 }
 
 
-@media screen and (min-width: 800px){
+@media screen and (min-width: 1000px){
     .nav-bar{
         flex-direction: row;
         position: inherit;
         padding: 8px 0 8px 0;
         margin-left: -15px;
         width: calc(100% + 30px);
-
+        display: flex;
         justify-content: center;
     }
 
@@ -396,6 +398,7 @@ button {
         h2{
             top: 0;
             left: 16px;
+            right: unset;
         }
         p{
             bottom: 0;
