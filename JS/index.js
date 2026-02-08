@@ -6,6 +6,39 @@ injectHTML("./htmlmodules/nav.html",
 ).then(() => console.log("Nav Loaded"));
 
 
+// ---- Theme helpers ----
+(function initTheme() {
+    try {
+        const saved = localStorage.getItem('theme'); // 'light' | 'dark' | 'system' | null
+        const root = document.documentElement;
+        if (saved === 'light' || saved === 'dark') {
+            root.dataset.theme = saved;
+        } else {
+            delete root.dataset.theme;
+        }
+        // Expose simple API to play with themes from console or UI later
+        window.setTheme = function(theme) {
+            if (theme === 'light' || theme === 'dark') {
+                localStorage.setItem('theme', theme);
+                document.documentElement.dataset.theme = theme;
+            } else {
+                localStorage.setItem('theme', 'system');
+                delete document.documentElement.dataset.theme;
+            }
+        };
+        window.getTheme = function() {
+            return localStorage.getItem('theme') || 'system';
+        };
+        window.setCSSVar = function(name, value) {
+            if (!name.startsWith('--')) name = `--${name}`;
+            document.documentElement.style.setProperty(name, value);
+        };
+    } catch (e) {
+        // Fallback: ignore storage errors (private mode, etc.)
+    }
+})();
+// ---- End theme helpers ----
+
 let loaded = false;
 
 const glitchText = document.querySelectorAll('.glitch, .layers');
