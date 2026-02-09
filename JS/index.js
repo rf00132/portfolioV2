@@ -5,40 +5,58 @@
 
 injectHTML("./htmlmodules/nav.html",
     document.querySelector("nav")
-).then(() => console.log("Nav Loaded"));
+).then(() => console.log("Content loaded"));
 
 
 // ---- Theme helpers ----
 (function initTheme() {
-    try {
-        const saved = localStorage.getItem('theme'); // 'light' | 'dark' | 'system' | null
-        const root = document.documentElement;
-        if (saved === 'light' || saved === 'dark') {
-            root.dataset.theme = saved;
-        } else {
-            delete root.dataset.theme;
-        }
-        // Expose simple API to play with themes from console or UI later
-        window.setTheme = function(theme) {
-            if (theme === 'light' || theme === 'dark') {
-                localStorage.setItem('theme', theme);
-                document.documentElement.dataset.theme = theme;
-            } else {
-                localStorage.setItem('theme', 'system');
-                delete document.documentElement.dataset.theme;
+    const dispatchThemeChange = () => {
+        const detail = { theme: document.documentElement.dataset.theme };
+        try {
+            window.dispatchEvent(new CustomEvent('themechange', { detail }));
+        } catch (_) {
+            // Older browsers: fallback to plain Event
+            const evt = document.createEvent && document.createEvent('Event');
+            if (evt && evt.initEvent) {
+                evt.initEvent('themechange', true, true);
+                window.dispatchEvent(evt);
             }
-        };
-        window.getTheme = function() {
-            return localStorage.getItem('theme') || 'system';
-        };
-        window.setCSSVar = function(name, value) {
-            if (!name.startsWith('--')) name = `--${name}`;
-            document.documentElement.style.setProperty(name, value);
-        };
-    } catch (e) {
-        // Fallback: ignore storage errors (private mode, etc.)
+        }
+    };
+
+    const applySystemTheme = () => {
+        document.documentElement.dataset.theme =
+            window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        dispatchThemeChange();
+    };
+
+    const saved = localStorage.getItem('theme');
+    if (saved === 'light' || saved === 'dark') {
+        document.documentElement.dataset.theme = saved;
+        dispatchThemeChange();
+    } else {
+        applySystemTheme();
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+            if (localStorage.getItem('theme') && localStorage.getItem('theme') !== 'system') return;
+
+            applySystemTheme();
+        });
     }
+
+    window.setTheme = (theme) => {
+        if (theme === 'light' || theme === 'dark') {
+            localStorage.setItem('theme', theme);
+            document.documentElement.dataset.theme = theme;
+            dispatchThemeChange();
+        } else {
+            localStorage.setItem('theme', 'system');
+            applySystemTheme();
+        }
+    };
+
+    window.getTheme = () => localStorage.getItem('theme') || 'system';
 })();
+
 // ---- End theme helpers ----
 
 let loaded = false;
@@ -76,12 +94,34 @@ function onLoad(){
         menuButton = document.querySelector('#menu-button');
         navBar = document.querySelector('.nav-bar');
         menuButton.addEventListener('click', toggleMenu);
-        return loadScript("./JS/idleGame.js");
-    });
+
+        // Theme toggle setup
+        themeToggle = document.querySelector('#theme-toggle');
+        if (!themeToggle) return;
+
+        const updateThemeToggleLabel = () => {
+            const nextLabel = document.documentElement.dataset.theme === 'dark' ? 'Light Mode' : 'Dark Mode';
+            themeToggle.innerText = nextLabel;
+            themeToggle.setAttribute('data-text', nextLabel);
+        };
+        // Keep the label in sync on load, on click, and whenever the system/browser theme changes
+        updateThemeToggleLabel();
+        window.addEventListener('themechange', updateThemeToggleLabel);
+        themeToggle.addEventListener('click', () => {
+            const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+            if (window.setTheme) {
+                window.setTheme(next);
+            } else {
+                document.documentElement.dataset.theme = next;
+            }
+            updateThemeToggleLabel();
+        });
+    }).then(() => loadScript("./JS/idleGame.js"));
     loaded = true;
 }
 let menuButton;
 let navBar;
+let themeToggle;
 let menuOpen = false;
 
 window.onresize = removeMenuStyle;

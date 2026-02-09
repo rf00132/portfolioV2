@@ -1,7 +1,13 @@
 ﻿:root {
-    --box-padding: 16px;
+    --box-padding: 16px 12px;
     --font: 'Orbitron';
-
+    --main-color: #9744be;
+    --secondary-color: #c18eda;
+    --main-accent: #793698;
+    --secondary-accent: #d6b4e7;
+    --tertiary-accent: #ac68cc;
+    --text-color-dark: var(--main-accent);
+    --text-color-light: var(--secondary-accent);
 
     --low-cutout: 20px;
     --high-cutout: calc(100% - var(--low-cutout));
@@ -219,15 +225,15 @@ button {
 #menu-button, #game-button{
     position: absolute;
     top: 0;
-    margin: 4px 8px;
+    margin: 4px;
     background-color: var(--main-accent);
     color: var(--text-color-light);
     clip-path: var(--box-bottom-left-cutout);
     padding: var(--box-padding);
     border: solid 3px var(--secondary-accent);
     border-radius: 2px;
-    width: 90px;
     z-index: 115;
+    width: 103px;
 
 
 }
@@ -348,6 +354,10 @@ button {
     nav {
         top: 0;
         position: sticky;
+    }
+
+    .ui-box, #game-button, #menu-button{
+        width:103px;
     }
 
 

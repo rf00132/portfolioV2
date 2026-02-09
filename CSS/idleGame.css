@@ -2,7 +2,6 @@
     left: 0;
     clip-path: var(--box-bottom-right-cutout);
     height: 20px;
-    padding: 16px 24px 16px 8px;
     p {
         margin: 0;
         width: 100%;
