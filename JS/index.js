@@ -1,5 +1,7 @@
 //todo: add in blank empty div that takes up the rest of the space of the page
 // it can be given toggle menu as an event listener and that function can hide and show the blank div
+//todo: seems like it is defaulting to dark mode everywhere, need to change
+
 
 injectHTML("./htmlmodules/nav.html",
     document.querySelector("nav")
