@@ -1,8 +1,3 @@
-//todo: add in blank empty div that takes up the rest of the space of the page
-// it can be given toggle menu as an event listener and that function can hide and show the blank div
-
-
-
 // Inject cookie banner first so it can initialize before other UI
 injectHTML("./htmlmodules/cookie.html",
     document.querySelector("#cookie-popup")
@@ -81,12 +76,39 @@ function toggleMenu() {
     if(menuOpen){
         menuButton.innerText = "Menu";
         navBar.setAttribute('style', '');
+        // Hide spacer when menu is closed
+        togglePageSpacer(false);
         menuOpen = false;
     } else {
         menuButton.innerText = "Close";
         navBar.setAttribute('style', 'display: flex;');
+        // Show spacer when menu is open
+        togglePageSpacer(true);
         menuOpen = true;
     }
+}
+
+// Ensures a blank spacer div exists that can fill remaining page space
+let pageSpacer;
+function ensurePageSpacer() {
+    if (!pageSpacer) {
+        pageSpacer = document.getElementById('page-spacer');
+    }
+
+    if (pageSpacer && !pageSpacer.dataset.bound) {
+        pageSpacer.addEventListener('click', () => {
+            // Clicking the spacer closes the menu
+            if (menuOpen) toggleMenu();
+        });
+        pageSpacer.dataset.bound = 'true';
+    }
+    return pageSpacer;
+}
+
+function togglePageSpacer(show) {
+    const el = ensurePageSpacer();
+    if (!el) return;
+    el.style.display = show ? 'block' : 'none';
 }
 
 function onLoad(){
@@ -102,6 +124,8 @@ function onLoad(){
         menuButton = document.querySelector('#menu-button');
         navBar = document.querySelector('.nav-bar');
         menuButton.addEventListener('click', toggleMenu);
+        // Ensure the page spacer exists early
+        ensurePageSpacer();
 
         // Theme toggle setup
         themeToggle = document.querySelector('#theme-toggle');
@@ -140,6 +164,8 @@ function removeMenuStyle(){
     navBar.style = "";
     menuOpen = false;
     menuButton.innerText = "Menu";
+    // Ensure spacer is hidden on wide viewports
+    document.querySelector("#page-spacer").style.display = 'none';
 }
 
 

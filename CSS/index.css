@@ -1,5 +1,6 @@
 ﻿:root {
     --box-padding: 16px 12px;
+    --nav-width: 140px;
     --font: 'Orbitron';
     --main-color: #9744be;
     --secondary-color: #c18eda;
@@ -22,9 +23,7 @@
 
     --tile-top-right-cutout: polygon(0 0, 0 var(--high-cutout-short),var(--low-cutout-short) 100%, 100% 100%, 100% var(--low-cutout-short), var(--high-cutout-short) 0);
     --tile-top-left-cutout: polygon(0 var(--low-cutout-short), 0 100%,var(--high-cutout-short) 100%, 100% var(--high-cutout-short), 100% 0, var(--low-cutout-short) 0);
-
     --tile-all-cutout: polygon(0 var(--low-cutout-short),0 var(--high-cutout-short),var(--low-cutout-short) 100%, var(--high-cutout-short) 100%, 100% var(--high-cutout-short), 100% var(--low-cutout-short),var(--high-cutout-short) 0, var(--low-cutout-short) 0);
-
     color-scheme: light dark;
 }
 
@@ -52,6 +51,26 @@ body {
     overflow-x: hidden;
     max-width: 100%;
     height: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Horizontal spacer overlay that fills remaining width when menu is open */
+#page-spacer, .page-spacer {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: var(--nav-width);
+    display: none; /* hidden by default; shown via JS toggle */
+    z-index: 104; /* below nav-bar (105), above main content (10) */
+    background: transparent; /* keep it visually blank; still captures clicks */
+}
+
+/* Always hide the spacer on wide viewports */
+@media (min-width: 1000px) {
+    #page-spacer, .page-spacer { display: none !important; }
 }
 
 main {
@@ -105,7 +124,7 @@ button {
 
 .nav-bar {
     background-color: var(--main-color);
-    width: 140px;
+    width: var(--nav-width);
     height: calc(100% - 64px);
     top: 0;
     right: 0;
