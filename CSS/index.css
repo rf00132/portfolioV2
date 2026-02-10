@@ -320,6 +320,55 @@ button {
     cursor: pointer;
 }
 
+/* Cookie banner styles – uses existing CSS variables to match theme */
+#cookie-popup {
+    position: relative;
+    z-index: 1000;
+}
+.cookie-banner {
+    position: fixed;
+    bottom: 16px;
+    background: var(--main-color);
+    color: var(--text-color-light);
+    border: solid 3px var(--secondary-accent);
+    padding: 24px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+    clip-path: var(--tile-all-cutout);
+    right: 8px;
+    left: 8px;
+    max-width: unset;
+    text-align: center;
+    .ui-box{
+        z-index: 100;
+        min-height: 50px;
+        padding: 0;
+        min-width: 200px;
+    }
+
+    h2 {
+        margin: 0 0 8px 0;
+    }
+
+    p {
+        margin: 0 0 24px 0;
+    }
+}
+
+.cookie-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: stretch;
+    flex-wrap: wrap;
+
+    .button {
+        flex: 1 1 auto;
+        text-align: center;
+        cursor: pointer;
+    }
+}
+
+
+
 @media screen and (max-width: 250px) {
     .content-box{
         margin: 4px 0;
@@ -336,9 +385,28 @@ button {
     h1, h2 {
         margin-top: 21px;
     }
-
 }
 
+@media (min-width: 497px) {
+    .cookie-actions{
+
+        height: 60px;
+    }
+}
+
+@media (min-width: 720px) {
+    .cookie-banner {
+        right: 16px;
+        left: unset;
+        max-width: min(520px, 92vw);
+    }
+    .cookie-actions {
+        justify-content: space-evenly;
+        .button {
+            flex: unset;
+        }
+    }
+}
 
 @media screen and (min-width: 1000px){
     .nav-bar{

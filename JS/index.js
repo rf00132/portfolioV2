@@ -1,8 +1,16 @@
 //todo: add in blank empty div that takes up the rest of the space of the page
 // it can be given toggle menu as an event listener and that function can hide and show the blank div
-//todo: seems like it is defaulting to dark mode everywhere, need to change
 
 
+
+// Inject cookie banner first so it can initialize before other UI
+injectHTML("./htmlmodules/cookie.html",
+    document.querySelector("#cookie-popup")
+).then(() => {
+    try { setupCookieConsent(); } catch (_) { /* no-op */ }
+});
+
+// Inject navigation
 injectHTML("./htmlmodules/nav.html",
     document.querySelector("nav")
 ).then(() => console.log("Content loaded"));
@@ -158,6 +166,40 @@ function loadScript(src) {
         document.head.appendChild(script);
     });
 }
+
+// ---- Cookie consent ----
+function setupCookieConsent() {
+    const KEY = 'cookieConsent';
+    const container = document.querySelector('#cookie-popup');
+    if (!container) return;
+
+    const existingChoice = localStorage.getItem(KEY);
+    if (existingChoice === 'accepted' || existingChoice === 'rejected') {
+        container.innerHTML = '';
+        return;
+    }
+
+    const banner = container.querySelector('.cookie-banner');
+    if (!banner) return;
+
+    const acceptBtn = banner.querySelector('#cookie-accept');
+    const rejectBtn = banner.querySelector('#cookie-reject');
+
+    const hide = () => {
+        // Simple hide; could add animation classes here if desired
+        container.innerHTML = '';
+    };
+
+    if (acceptBtn) acceptBtn.addEventListener('click', () => {
+        localStorage.setItem(KEY, 'accepted');
+        hide();
+    });
+    if (rejectBtn) rejectBtn.addEventListener('click', () => {
+        localStorage.setItem(KEY, 'rejected');
+        hide();
+    });
+}
+// ---- End cookie consent ----
 
 
 

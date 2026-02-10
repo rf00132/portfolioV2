@@ -48,8 +48,6 @@ let unlocks = {
 
 let gamesPage = false;
 
-let cookies = true;
-
 let idleInterval;
 let scrollInterval;
 let movementInterval;
@@ -63,7 +61,7 @@ let resetting = false;
 // Function to save a value to a cookie
 function setCookie(name, value) {
     let expires = "";
-    if (cookies) {
+    if (localStorage.getItem("cookieConsent") === "accepted") {
         const days = 30;
         const date = new Date();
         date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
